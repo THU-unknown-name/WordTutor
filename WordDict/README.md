@@ -17,3 +17,20 @@
 + GetSound(self, word):获取发音文件路径
 + update(self):更新词库
 ## 词库爬取方式
+Run Grep.py to grep information of words stored in utf-8.txt and store the result into save.txt
+The current format used to store in save.txt is a list printed as string.
++ The first dimension of the list defines diffrent records for words
++ The second dimension of the lis defines the different aspects of information for the word.
+	+ 0 -> Word: The word
+	+ 1 -> Pronounciation: The pronounciation of the word
+	+ 2 -> Explanation: Chinese meaning
+	+ 3 -> Example: Example sentenses
+Usage:
++ Run Grep.py.
+	+ Input -2 to grep Inforamtion of words stored in utf-8.txt or upgrade the current List.
+		+ Failure may occur during this procedure, just input and run again to fill in the missing entries.
+	+ Input -1 to save the current greped information(word list included).
+	+ Input a non-negative number to see the details of a specific entry(in the order of storage in List).
+		+ Attention, if the ubound exceed the count of entries, the program would crash.
+	+ Input a negative number less than -2 to exit.
+
