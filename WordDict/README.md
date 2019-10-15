@@ -1,6 +1,6 @@
 # 词库
 ## 基本功能接口介绍
-词库信息将存于数据(dict) WordDict中：
+词库信息将存于class WordDict的私有成员__word_dict: dict中：
 + key:英文单词
 + value: [information, extra]
 	+ information: [释义,发音]
@@ -9,12 +9,12 @@
 	         ...}
 
 函数：
-+ Open(self,DictPath):打开词库文件，录入WordDict中
-+ ListOfWord(self):获取整个词库所有的单词
-+ Navigate(self):遍历词库
-+ MatchWord(self,word,matcher,parameter):匹配单词
-+ GetInfo(self,word):获取单词的信息
-+ GetSound(self, word):获取发音文件路径
++ load(self, rootpath):打开词库文件，录入WordDict中；rootpath为程序运行根目录
++ get_wordlist(self):获取整个词库所有的单词
++ navigate(self):遍历词库
++ match_word(self,word,matcher,parameter):匹配单词
++ get_info(self,word):获取单词的信息
++ get_sound(self, word):获取发音文件路径
 + update(self):更新词库
 ## 词库爬取方式
 Run Grep.py to grep information of words stored in utf-8.txt and store the result into save.txt
