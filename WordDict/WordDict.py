@@ -1,9 +1,6 @@
 import os
 import re
 
-WORD_NOT_FOUND = -1
-WORD_DICT = WordDict()
-
 class WordDict:
 	def __init__(self):
 		'''
@@ -21,18 +18,22 @@ class WordDict:
 
 	def load(self, rootpath):
 		'''打开词库文件，录入WordDict中'''
-		filepath = os.path.join(rootpath, '')
+		self.__rootpath=rootpath
+		filepath = os.path.join(rootpath, 'WordList.txt')
 		fs = open(filepath, 'r')
+		for line in fs:
+			word=line.strip()
+			with open(os.path.join(rootpath,word)) as fWord:
+				self.__word_dict[word]=eval(fWord.read())
+		fs.close()
 		
-		pass
-
 	def get_wordlist(self):
 		'''获取整个词库所有的单词'''
-		filepath = ''
+		filepath = os.path.join(self.__rootpath,'WordList.txt')
 		word_list = []
 		fs = open(filepath, 'r')
 		for line in fs:
-			words = re.split(' ', line)
+			words = re.split(' ', line.strip())
 			word_list += words
 		fs.close()
 		return word_list
@@ -92,3 +93,5 @@ class WordDict:
 		'''
 		pass
 
+WORD_NOT_FOUND = -1
+WORD_DICT = WordDict()
