@@ -14,12 +14,14 @@ class WordDict:
 						...}
 		'''
 		self.__word_dict = {}		#私有成员，只能在模块内调用，外部无法调用
-		self.__rootpath = ""		#程序根目录
+		self.__rootpath = ""		#词库根目录
 		self.word_list = []			#单词目录
 		pass
 
 	def load(self, rootpath):
 		'''打开词库文件，录入WordDict中\n
+		input:\n
+			rootpath:词库根目录
 		if succeed:\n
 			return WORD_DICT_LOAD_SUCCEED
 		else:\n
@@ -83,7 +85,7 @@ class WordDict:
 				likelihood:与wordlist中的单词的匹配度\n
 				wordlist:单词列表，word与wordlist中的单词分别进行匹配
 		'''
-		wordlist = self.get_wordlist()
+		wordlist = self.word_list
 		likelihood = np.zeros(len(wordlist))		#相似度
 		for num in range(len(wordlist)):
 			mword = wordlist[num]
@@ -92,9 +94,9 @@ class WordDict:
 			elif mword == word:
 				likelihood[num] = 0					#单词相同，相似度为0
 			else:
-				likelihood[num] = self.matcher(mword, word)#首字母相同，求相似度
-		pass
-		#return [likelihood,wordlist]
+				[likelihood[num],_] = self.matcher(mword, word)#首字母相同，求相似度
+
+		return [likelihood,wordlist]
 
 	def matcher(self, template_str, match_str):	
 		'''采用DTW算法进行字符串匹配\n
@@ -120,19 +122,19 @@ class WordDict:
 					errornum[-j] = 0
 				W[-j] = W[minW] + pow(tstr_len-j-i, 2) + pow(errornum[-j], 2)
 				match_path[-j][i] = minW
-			print(W)
-		print(match_path)
+			#print(W)
+		#print(match_path)
 		path = np.zeros(mstr_len, int)
 		stage = tstr_len - 1
 		path[-1] = stage
 		for j in range(2, mstr_len + 1):
 			path[-j] = match_path[stage][-j+1]
-		print(path)
+		#print(path)
 		match = [[],[]]
 		i = 0
 		while i < mstr_len - 1:
 			j = i + 1
-			while (j < mstr_len) & (path[i] == path[j]):
+			while (j < mstr_len) and (path[i] == path[j]):
 				j += 1
 			if j == mstr_len:
 				match[1].append(match_str[i:j])
@@ -151,8 +153,10 @@ class WordDict:
 		'''获取单词的信息\n
 		input：\n
 			word：单词\n
-		output：\n
-			list[information,extra]
+		if succeed:\n
+			return list[information,extra]\n
+		else:\n
+			return WORD_NOT_FOUND
 		'''
 		if word in self.__word_dict.keys():
 			return self.__word_dict[word]
@@ -185,11 +189,16 @@ GET_WORDLIST_SUCCEED = 1
 
 if __name__ == "__main__":
 	WORD_DICT = WordDict()
-	load_err = WORD_DICT.load('dict')
+	load_err = WORD_DICT.load('HappyWordTutorial\WordDict\dict')
 	if load_err != WORD_DICT_LOAD_SUCCEED:
 		print(load_err)
-	[W, match] = WORD_DICT.matcher('afternoon', 'apterno')
+		exit(0)
+	[W, match] = WORD_DICT.matcher('afternoon', 'after')
 	print(W)
 	print(match)
+	[likelihood, wordlist] = WORD_DICT.match_word('afternoon')
+	top5index = np.argsort(likelihood)[:5]
+	top5word = [wordlist[i] for i in top5index]
+	print(top5word)
 	pass
 
