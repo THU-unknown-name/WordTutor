@@ -245,8 +245,8 @@ chest
 chicken
 child
 childhood
-china
 China
+china
 Chinese
 chocolate
 choice
@@ -416,6 +416,7 @@ dumpling
 during
 duty
 DVD
+E-mail
 each
 ear
 early
@@ -438,7 +439,6 @@ electric
 elephant
 eleven
 else
-E-mail
 empty
 encourage
 end
@@ -865,8 +865,8 @@ match
 material
 mathematics
 matter
-may
 May
+may
 maybe
 me
 meal
@@ -976,9 +976,9 @@ November
 now
 number
 nurse
+o'clock
 object
 ocean
-o'clock
 October
 of
 off
@@ -1011,6 +1011,7 @@ over
 overcoat
 own
 owner
+P.E.
 Pacific
 package
 page
@@ -1037,7 +1038,6 @@ path
 patient
 pay
 PC
-P.E.
 peace
 pear
 pen

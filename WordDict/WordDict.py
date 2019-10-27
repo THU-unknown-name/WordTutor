@@ -1,6 +1,8 @@
 import os
 import re
 import numpy as np
+import Grep
+import Extract
 
 class WordDict:
 	def __init__(self):
@@ -162,7 +164,11 @@ class WordDict:
 			return self.__word_dict[word]
 		else:
 			#不在词典中，解决方案：1、上网爬取；2、显示错误信息
-			return WORD_NOT_FOUND
+			lSpace=Grep.Get(word,Grep.Info)
+			if lSpace!=None:
+				return Extract.Extract(lSpace)
+			else:
+				return WORD_NOT_FOUND
 		pass
 		#return [information,extra]
 

@@ -186,6 +186,7 @@
 + get_sound(self, word):获取发音文件路径
 
 + update(self):更新词库
+
 ## 词库爬取方式
 Run Grep.py to grep information of words stored in utf-8.txt and store the result into save.txt
 The current format used to store in save.txt is a list printed as string.
@@ -194,7 +195,8 @@ The current format used to store in save.txt is a list printed as string.
 	+ 0 -> Word: The word
 	+ 1 -> Pronounciation: The pronounciation of the word
 	+ 2 -> Explanation: Chinese meaning
-	+ 3 -> Example: Example sentenses
+	+ 3 -> Change: Type changing
+	+ 4 -> Example: Example sentenses
 Usage:
 + Run Grep.py.
 	+ Input -2 to grep Inforamtion of words stored in utf-8.txt or upgrade the current List.
@@ -203,4 +205,45 @@ Usage:
 	+ Input a non-negative number to see the details of a specific entry(in the order of storage in List).
 		+ Attention, if the ubound exceed the count of entries, the program would crash.
 	+ Input a negative number less than -2 to exit.
+
+Run Extract.py to Extract the save.txt to dict dir, which writes the details of each word into separate file and writes a total list into WordList.txt
+
+Grep.py:
++ Info: Default classes to collect information
+
++ Get(sWord,lInfo): Grep information of word
+	+ input:
+
+		+ sWord str:Word to grep info
+		+ lInfo list[str classes...]:list of strings which describes the classes of tags to grep specific parts of information
+
+	+ output:
+
+		+ list[str data...]:contexts greped from iciba with respect to lInfo
+
+	+ example:
+
+		import Grep
+		word="cluster"
+		lSpace=Grep.Get(word,Grep.Info)
+		print(lSpace)
+
+Extract.py:
++ Extract(lList): Extract the raw information greped by Get into Info format used by WordDict
+	+ input:
+
+		+ lList list:Original Information greped by Get
+
+	+ output:
+
+		+ list: format used by WordDict(returned by get_info)
+
+	+ example:
+
+		import Grep
+		import Extract
+		word="cluster"
+		lSpace=Grep.Get(word,Grep.Info)
+		lSpace=Extract.Extract(lSpace)
+		print(lSpace)
 

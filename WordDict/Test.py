@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+import WordDict
 
-from WordDict import WORD_DICT as wdDict
+wdDict=WordDict.WordDict()
 
 
 wdDict.load("dict")
@@ -15,6 +16,6 @@ for a,b in wdDict.navigate():
 
 #print(wdDict.get_wordlist())
 
-print(wdDict.get_sound("any"))
 print(wdDict.get_info("any"))
+print(wdDict.get_info("ancestor"))
 
