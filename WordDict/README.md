@@ -186,6 +186,15 @@
 + get_sound(self, word):获取发音文件路径
 
 + update(self):更新词库
+	+ input:
+
+		wordlist list[str...]: list words to grep information
+		rootpath str: path to store result data
+
+	+ example:
+
+		import WordDict
+		WordDict.WordDict.update("wordlist.txt","dict")
 
 ## 词库爬取方式
 Run Grep.py to grep information of words stored in utf-8.txt and store the result into save.txt
@@ -207,6 +216,9 @@ Usage:
 	+ Input a negative number less than -2 to exit.
 
 Run Extract.py to Extract the save.txt to dict dir, which writes the details of each word into separate file and writes a total list into WordList.txt
+
+Run Process.sh to convert utf-8.txt to wordlist.txt for a raw word list
+Then Run Process.py to Grep the word information and store them into Directory dict
 
 Grep.py:
 + Info: Default classes to collect information
@@ -232,7 +244,7 @@ Extract.py:
 + Extract(lList): Extract the raw information greped by Get into Info format used by WordDict
 	+ input:
 
-		+ lList list:Original Information greped by Get
+		+ lList list: Original Information greped by Get
 
 	+ output:
 
@@ -246,4 +258,18 @@ Extract.py:
 		lSpace=Grep.Get(word,Grep.Info)
 		lSpace=Extract.Extract(lSpace)
 		print(lSpace)
+
++ ExtractToDir(lList,rootpath): Extract the raw information and write to rootpath
+	+ input:
+
+		+ lList list: Original Information
+		+ rootpath str: root path to store extracted information
+
+	+ example:
+
+		import Extract
+		with open("save.txt","r") as fFile:
+			data=fFile.read()
+			lList=eval(data)
+		ExtractToDir(lList,"dict")
 

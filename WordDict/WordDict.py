@@ -184,10 +184,35 @@ class WordDict:
 		pass
 		#return PathOfSound
 
-	def update(self):
-		'''更新词库
+	@staticmethod
+	def update(wordlist,rootpath):
+		'''更新词库\n
+		input: \n
+			wordlist: Danngo \n
+			rootpath: root path to store greped word
 		'''
-		pass
+		result=[]
+		with open(wordlist,"r") as fSource:
+			for sLine in fSource:
+				sSpace=sLine.strip()
+				if len(sSpace)>0:
+					result.append([sSpace])
+		while True:
+			def CallBack(iIndex):
+				print(">>%d/%d"%(iIndex+1,len(result)))
+			Grep.Update(result,CallBack)
+			iCount=0
+			for iLoop1 in range(len(result)):
+				if len(result[iLoop1])>1:
+					iCount+=1
+			print("%d/%d"%(iCount,len(result)))
+			if iCount>=len(result):
+				break
+
+		with open(os.path.join(rootpath,'Original.txt'),"w") as fSave:
+			fSave.write(str(result))
+
+		Extract.ExtractToDir(result,rootpath)
 
 WORD_NOT_FOUND = -1
 WORD_DICT_LOAD_SUCCEED = 1

@@ -6,16 +6,14 @@ wdDict=WordDict.WordDict()
 
 wdDict.load("dict")
 
+#print(wdDict.get_wordlist())
+
+print(wdDict.get_info("any"))
+print(wdDict.get_info("ancestor"))
 
 '''
 for a,b in wdDict.navigate():
 	print(a,b)
 	input()
 '''
-
-
-#print(wdDict.get_wordlist())
-
-print(wdDict.get_info("any"))
-print(wdDict.get_info("ancestor"))
 

@@ -43,19 +43,17 @@ def Get(sWord,lInfo):
 
 
 #Upgrade the dictionary
-def Update(result):
+def Update(result,CallBack=None):
 	global Info
 	#Navigate throuhout the dictinary
 	for iLoop1 in range(len(result)):
 		#Fillin Entries not complete
 		if len(result[iLoop1])<=1:
-			#Printout progress
-			print("%d/%d"%(iLoop1,len(result)))
 			data=Get(result[iLoop1][0],Info)
 			if data is not None:
 				result[iLoop1]=result[iLoop1][0:1]+data
-			else:
-				print("Failed to request")
+			if CallBack is not None:
+				CallBack(iLoop1)
 
 
 def main():
