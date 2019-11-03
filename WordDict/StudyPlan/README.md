@@ -12,5 +12,6 @@ Vocab为一dict，其中key为单词，value为该单词的熟悉度
 包括TodayList类，从Vocab中选取一定的数量的词汇构成每日的计划列表
 todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 
-
+### testTodayList.py
+测试用文件
 
