@@ -1,4 +1,4 @@
-import WordDict
+from WordDict import WordDict
 import pickle
 import os
 

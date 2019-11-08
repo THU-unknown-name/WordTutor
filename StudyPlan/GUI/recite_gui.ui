@@ -43,23 +43,6 @@
      <string>记住了</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser_word">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>120</y>
-      <width>381</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <property name="html">
-     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:36pt;&quot;&gt;Word&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_revoke">
     <property name="enabled">
      <bool>true</bool>
@@ -126,6 +109,85 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>TODO: 今日进度</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>105</x>
+      <y>81</y>
+      <width>581</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>word</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>32</pointsize>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>pron</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>meaning</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>sent1</string>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
+     </property>
+    </item>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>10</y>
+      <width>681</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+    <property name="textVisible">
+     <bool>false</bool>
+    </property>
+    <property name="textDirection">
+     <enum>QProgressBar::TopToBottom</enum>
     </property>
    </widget>
   </widget>
@@ -341,8 +403,75 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_no</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>forget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>649</x>
+     <y>412</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>649</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_revoke</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>forget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>394</x>
+     <y>416</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>612</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_next</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>next_word()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>516</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>516</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_next</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hide_exp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>428</x>
+     <y>513</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>428</x>
+     <y>550</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>show_exp()</slot>
+  <slot>forget()</slot>
+  <slot>next_word()</slot>
+  <slot>hide_exp()</slot>
  </slots>
 </ui>
