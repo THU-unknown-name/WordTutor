@@ -5,9 +5,8 @@ import lxml.html
 import os
 import re
 
-Info=["base-speak","base-list","change","article"]
-#Info=["base-list","article"]
-
+#Info=[["base-speak",None],["base-list",None],["change",None],["article",{"product","hotwords"}]]
+Info=[["base-speak",None,None,None],["base-list",None,None,None],["change",None,None,None],["collins-section",None,{"ms-if"},{"suggest"}]]
 
 def Get(sWord,lInfo):
 	newline=re.compile("[ \r\n]*[\r\n][ \r\n]*")
@@ -20,7 +19,6 @@ def Get(sWord,lInfo):
 		#Grep Html
 		request=urllib.request.urlopen("http://www.iciba.com/%s"%(sWord),timeout=2)
 		data=request.read().decode()
-		#print(data)
 	except urllib.request.URLError:
 		#What error?
 		print("Failed to request")
@@ -31,13 +29,44 @@ def Get(sWord,lInfo):
 		return None
 
 	document=lxml.html.document_fromstring(data)
+	document=document.find_class("container")
+	if len(document)!=1:
+		print("Error")
+		return
+	document=document[0]
 	for iLoop1 in range(len(lInfo)):
-		infos=document.find_class(lInfo[iLoop1])
+		infos=document.find_class(lInfo[iLoop1][0])
 
 		result[iLoop1]=""
 		for info in infos:
-			result[iLoop1]=result[iLoop1]+info.text_content()
-		result[iLoop1]=space.sub(" ",newline.sub("\n",result[iLoop1]))
+			bSkip=False
+
+			if lInfo[iLoop1][1] is not None:
+				for cSkip in lInfo[iLoop1][1]:
+					if cSkip in info.classes:
+						bSkip=True
+						break
+
+			if not bSkip and lInfo[iLoop1][2] is not None:
+				for iKey,_ in info.items():
+					if iKey in lInfo[iLoop1][2]:
+						bSkip=True
+						break
+
+			if not bSkip and lInfo[iLoop1][3] is not None:
+				for eData in info.iter():
+					for cSkip in lInfo[iLoop1][3]:
+						if cSkip in eData.classes:
+							bSkip=True
+							break
+					if bSkip:
+						break
+
+
+			if not bSkip:
+				result[iLoop1]=result[iLoop1]+info.text_content()
+
+		result[iLoop1]=space.sub(" ",newline.sub("\n",result[iLoop1])).strip()
 
 	return result
 

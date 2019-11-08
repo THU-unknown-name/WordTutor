@@ -2,7 +2,7 @@
 import os
 
 def Extract(lList):
-	return [[lList[1].strip(),lList[0].strip()],[lList[2].strip()]]
+	return [[lList[1],lList[0]],[lList[2]]]
 
 def ExtractToDir(lList,rootpath):
 	with open(os.path.join(rootpath,"WordList.txt"),"w") as fList:
