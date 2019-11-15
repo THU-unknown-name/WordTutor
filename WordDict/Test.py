@@ -11,6 +11,7 @@ def main():
 
 	print(wdDict.get_info("any"))
 	print(wdDict.get_info("ancestor"))
+	print(wdDict.get_info("你好"))
 
 	'''
 	for a,b in wdDict.navigate():

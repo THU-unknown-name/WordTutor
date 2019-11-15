@@ -4,6 +4,7 @@ import urllib.request
 import lxml.html
 import os
 import re
+import urllib.parse
 
 #Info=[["base-speak",None],["base-list",None],["change",None],["article",{"product","hotwords"}]]
 Info=[["base-speak",None,None,None],["base-list",None,None,None],["change",None,None,None],["collins-section",None,{"ms-if"},{"suggest"}]]
@@ -17,7 +18,7 @@ def Get(sWord,lInfo):
 
 	try:
 		#Grep Html
-		request=urllib.request.urlopen("http://www.iciba.com/%s"%(sWord),timeout=2)
+		request=urllib.request.urlopen("http://www.iciba.com/%s"%(urllib.parse.quote(sWord)),timeout=2)
 		data=request.read().decode()
 	except urllib.request.URLError:
 		#What error?
