@@ -25,6 +25,13 @@ class ReciteWords:
             sys.exit()
 
     def next_word(self):
+        """
+        get next word
+        if has_next_word:
+            return true
+        else: (have finished today's task)
+            return false
+        """
         self.ite += 1
         if self.ite >= len(self.today_list):
             self.today_list = self.review_list.copy()
@@ -41,13 +48,16 @@ class ReciteWords:
         return self.vocab.getInfo(self.word_current)
 
     def review_this_word(self):
+        # this word will show again today
         self.review_list.append(self.word_current)
         print(self.word_current)
 
     def downgrade(self):
-        # new 不会 --> unfamiliar
-        # familiar 不会 --> unfamiliar
-        # unfamiliar 不会 --> unfamiliar
+        """
+        new 不会 --> unfamiliar
+        familiar 不会 --> unfamiliar
+        unfamiliar 不会 --> unfamiliar
+        """
         self.vocab.updateFamiliarity(word=self.word_current, familiarity=1)
 
     def upgrade(self):
@@ -113,17 +123,21 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(3).setHidden(not visible)
 
     def show_exp(self):
+        # slot
         self.word_display_upd(True)
 
     def hide_exp(self):
+        # slot
         self.word_display_upd(False)
 
     def forget(self):
+        # slot
         self.reciting.review_this_word()
         self.reciting.downgrade()
         self.forget_this_word = True
 
     def next_word(self):
+        # slot
         if self.forget_this_word:
             pass
         else:
@@ -136,7 +150,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
             self.pushButton_yes.setVisible(True)
             self.pushButton_no.setVisible(True)
         else:
-            # self.complete()
+            # signal for finishing today_list
             self.complete_all.emit()
 
     # def complete(self):
