@@ -1,8 +1,9 @@
 import os
 import re
+import copy
 import numpy as np
-from . import Grep
-from . import Extract
+import Grep
+import Extract
 
 class WordDict:
 	def __init__(self):
@@ -88,15 +89,20 @@ class WordDict:
 				wordlist:单词列表，word与wordlist中的单词分别进行匹配
 		'''
 		wordlist = self.word_list
-		likelihood = np.zeros(len(wordlist))		#相似度
+		likelihood = np.zeros(len(wordlist), dtype='int')		#相似度
 		for num in range(len(wordlist)):
 			mword = wordlist[num]
 			if mword[0] != word[0]:
-				likelihood[num] = float('inf')		#首字母不相同，相似度为正无穷
+				#首字母不相同，相似度为正无穷
+				likelihood[num] = 65535
 			elif mword == word:
-				likelihood[num] = 0					#单词相同，相似度为0
+				#单词相同，相似度为0
+				likelihood[num] = 0
 			else:
-				[likelihood[num],_] = self.matcher(mword, word)#首字母相同，求相似度
+				#首字母相同，求相似度
+				[likelihood_0, _] = self.matcher(mword, word)
+				[likelihood_1, _] = self.matcher(word, mword)
+				likelihood[num] = min(likelihood_0, likelihood_1)
 
 		return [likelihood,wordlist]
 
@@ -110,45 +116,59 @@ class WordDict:
 				score:匹配度，值越小匹配度越高，最小为0\n
 				match:匹配情况
 		'''
-		W = np.zeros(len(template_str))						#DTW算法中的权值
 		tstr_len = len(template_str)
 		mstr_len = len(match_str)
-		match_path = np.zeros([tstr_len, mstr_len], int)	#记录DTW算法路径
-		errornum = np.zeros(tstr_len)						#记录连续不相等的的字母个数
-		for i in range(mstr_len):
+		if(tstr_len == 0 or mstr_len == 0):
+			return 'The inputs must be strings'
+		matchs = [[[template_str[0]], [match_str[0]]]]
+		Wold = np.zeros(tstr_len, dtype='int')
+		Wnew = np.zeros(tstr_len, dtype='int')
+		error_block = np.zeros(tstr_len, dtype='int')
+		minW = 0
+		for i in range(1, tstr_len):
+			matchs.append([[template_str[0]], [match_str[0]]])
+			matchs[i][0].append(template_str[1:i+1])
+			matchs[i][1].append('')
+			error_block[i] = 1
+			Wnew[i] = 2 + (1 << i)
+		for i in range(1, mstr_len):
 			for j in range(1, tstr_len + 1):
-				minW = np.argmin(W[:tstr_len-j+1])			#当前权值最小的位置
-				if(template_str[-j] != match_str[i]):		#
-					errornum[-j] += 1
+				minW = np.argmin(Wnew[:tstr_len-j+1])
+				matchs[-j] = copy.deepcopy(matchs[minW])
+				error_block[-j] = error_block[minW]
+				if(minW == tstr_len - j):
+					matchs[-j][1][-1] += match_str[i]
+					matchs[-j][0][-1] = template_str[minW]
+					#Wnew[-j] = Wold[minW]
+					#if(matchs[-j][0][-1] != matchs[-j][1][-1]):
+					Wnew[-j] = Wold[minW] + (1 << len(matchs[-j][1][-1])) + \
+						(1 << (error_block[-j] + 1))
 				else:
-					errornum[-j] = 0
-				W[-j] = W[minW] + pow(tstr_len-j-i, 2) + pow(errornum[-j], 2)
-				match_path[-j][i] = minW
-			#print(W)
-		#print(match_path)
-		path = np.zeros(mstr_len, int)
-		stage = tstr_len - 1
-		path[-1] = stage
-		for j in range(2, mstr_len + 1):
-			path[-j] = match_path[stage][-j+1]
-		#print(path)
-		match = [[],[]]
-		i = 0
-		while i < mstr_len - 1:
-			j = i + 1
-			while (j < mstr_len) and (path[i] == path[j]):
-				j += 1
-			if j == mstr_len:
-				match[1].append(match_str[i:j])
-				match[0].append(template_str[path[i]])
-			else:
-				match[1].append(match_str[i:j])
-				match[0].append(template_str[path[i]:path[j]])
-			i = j
-		if i == mstr_len - 1:
-			match[1].append(match_str[-1])
-			match[0].append(template_str[path[-1]])
-		return [W[-1], match]
+					if(matchs[-j][0][-1] != matchs[-j][1][-1]):
+						error_block[-j] += 1
+					if(minW < tstr_len - j - 1):
+						matchs[-j][0].append(template_str[minW+1:-j])
+						matchs[-j][1].append('')
+						error_block[-j] += 1
+						Wnew[-j] = Wnew[minW] + (1 << (tstr_len - j - minW - 1)) + \
+							(1 << error_block[-j])
+						Wold[-j] = Wnew[-j]
+					else:
+						Wnew[-j] = Wnew[minW]
+						Wold[-j] = Wnew[-j]
+					matchs[-j][0].append(template_str[-j])
+					matchs[-j][1].append(match_str[i])
+					if(template_str[-j] != match_str[i]):
+						Wnew[-j] += 2 + (1 << (error_block[-j] + 1))
+			#print(matchs)
+		for i in range(tstr_len-1):
+			matchs[i][0].append(template_str[i+1:])
+			matchs[i][1].append('')
+			Wnew[i] += (1 << (len(matchs[i][0][-1]) >> 1)) + \
+				(1 << (error_block[i] + 1))
+		#print(matchs)
+		minW = np.argmin(Wnew)
+		return [Wnew[minW], matchs[minW]]
 		pass
 
 	def get_info(self,word):
@@ -220,7 +240,9 @@ GET_WORDLIST_SUCCEED = 1
 
 if __name__ == "__main__":
 	WORD_DICT = WordDict()
-	load_err = WORD_DICT.load('HappyWordTutorial\WordDict\dict')
+	#root0 = 'HappyWordTutorial\WordDict\dict'
+	root = 'dict'
+	load_err = WORD_DICT.load(root)
 	if load_err != WORD_DICT_LOAD_SUCCEED:
 		print(load_err)
 		exit(0)
@@ -230,6 +252,7 @@ if __name__ == "__main__":
 	[likelihood, wordlist] = WORD_DICT.match_word('afternoon')
 	top5index = np.argsort(likelihood)[:5]
 	top5word = [wordlist[i] for i in top5index]
+	print(likelihood[top5index])
 	print(top5word)
 	pass
 
