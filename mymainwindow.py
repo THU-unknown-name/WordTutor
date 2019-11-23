@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'mymainwindow.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.0
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QCoreApplication
+from lookup import look_up
+from recite import Ui_MainWindow3
+from recite_action import ReciteGUI
+
+class Ui_MainWindow(object):
+    def __init__(self, WORD_DICT):
+        self.WORD_DICT = WORD_DICT
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(800, 600)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(340, 100, 101, 40))
+        font = QtGui.QFont()
+        font.setFamily("黑体")
+        font.setPointSize(11)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)        #查询单词
+        self.pushButton.setGeometry(QtCore.QRect(340, 150, 120, 41))
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)      #退出
+        self.pushButton_2.setGeometry(QtCore.QRect(340, 300, 120, 41))
+        self.pushButton_2.setObjectName("pushButton_2")
+
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)      #背单词
+        self.pushButton_3.setGeometry(QtCore.QRect(340, 200, 120, 41))
+        self.pushButton_3.setObjectName("pushButton_3")
+
+        self.game_button = QtWidgets.QPushButton(self.centralwidget)      #背单词
+        self.game_button.setGeometry(QtCore.QRect(340, 250, 120, 41))
+        self.game_button.setObjectName("game_button")
+
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 23))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.pushButton.clicked.connect(self.word_search)
+        self.pushButton_2.clicked.connect(QCoreApplication.instance().quit)
+        self.pushButton_3.clicked.connect(self.my_test)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setStyleSheet("#MainWindow{border-image:url(background.png);}")
+    def word_search(self):
+        self.ui_search=look_up(self.WORD_DICT)
+        self.ui_search.show()
+    def my_test(self):
+        self.ui_recite=ReciteGUI()
+        self.ui_recite.show()
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label.setText(_translate("MainWindow", "   主菜单"))
+        self.pushButton.setText(_translate("MainWindow", "查询单词"))
+        self.pushButton_2.setText(_translate("MainWindow", "退   出"))
+        self.pushButton_3.setText(_translate("MainWindow", "背 单 词"))
+        self.game_button.setText(_translate("MainWindow", "进入游戏"))

@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="congrats">
+    <file>congrats.jpg</file>
+  </qresource>
+</RCC>
