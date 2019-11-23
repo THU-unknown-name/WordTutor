@@ -12,8 +12,8 @@ class MainWindow(QMainWindow):
         self.windowTitleChanged.connect(self.onWindowTitleChange)
         self.w_width = 800  # 窗口初始宽度
         self.w_height = 650  # 窗口初始高度
-        self.w_left = 10  # 窗口起始位置x
-        self.w_top = 10  # 窗口起始位置y
+        self.w_left = 100  # 窗口起始位置x
+        self.w_top = 100  # 窗口起始位置y
         self.cw_loc = (self.width() / 10, self.w_height / 10)  # 填词格的初始位置 x, y
         self.cw_len = 30  # 单个格子的边长
         self.def_loc = (self.w_width * 2 / 3, self.w_height * 1 / 5)  # 中文释义的初始位置 x, y

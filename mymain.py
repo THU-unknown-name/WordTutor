@@ -11,7 +11,8 @@ if __name__ == '__main__':
     ui = Ui_MainWindow(WORD_DICT)
     ui.setupUi(MainWindow)
     MainWindow.setStyleSheet("#MainWindow{border-image:url(background1.jpg);}")
-    MainWindow.show()    #程序开始前，先读入词库数据库
+    MainWindow.show()    
+    #程序开始前，先读入词库数据库
     load_err = WORD_DICT.load('WordDict\\dict')
     if load_err != WordDict.WORD_DICT_LOAD_SUCCEED:
         print(load_err)
