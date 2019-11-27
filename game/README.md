@@ -1,7 +1,7 @@
 # WordTutor
 Project for Software Engineering, THU 2019 Fall
 
-This is for the crossword game. Currently it's an unoptimzied basic algorithm to generate a crossword from an example word list.
+Generate a crossword game from an example word list.
 
 当前进度：给定单词，生成填词游戏并显示，增加了一些优化
 待完成：
@@ -11,12 +11,12 @@ This is for the crossword game. Currently it's an unoptimzied basic algorithm to
 - [ ] 完善UI，（美化、按键等）
 
 ### getBestCrossword.py
-获取较优填词游戏结果
-当前筛选机制为黑名单+时间限制，如果全部单词都成功放置，或剩余单词均在黑名单中，则视为最佳结果输出；如果运行达到时间限制，直接输出
-可增加的优化机制：棋盘格大小，越小越好；棋盘格长宽比，1:1最好
-测试效率：
-- 9个单词，生成全部放置的填词游戏，执行100次花费0.2秒
-- 10个单词，其中一个单词不可能放置，执行100次花费1.4秒（可调整要求来减少时间）
+获取较优填词游戏结果  
+当前筛选机制为黑名单+时间限制，如果全部单词都成功放置，或剩余单词均在黑名单中，则视为最佳结果输出；如果运行达到时间限制，直接输出  
+可增加的优化机制：棋盘格大小，越小越好；棋盘格长宽比，1:1最好  
+测试效率：  
+- 9个单词，生成全部放置的填词游戏，执行100次花费0.2秒  
+- 10个单词，其中一个单词不可能放置，执行100次花费1.4秒（可调整要求来减少时间）  
 
 ### Crossword.py
 包括MyCrossword类，用于存储、生成、读取填字游戏
