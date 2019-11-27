@@ -32,20 +32,35 @@ class MainWindow(QMainWindow):
         print(s)
 
     # 显示空的填词格
-    def showCrossword(self, crossword):
-        cw_height = crossword.__len__()
-        cw_width = crossword[0].__len__()
+    def showCrossword(self, cw):
+        cw_height = cw.nRow
+        cw_width = cw.nCol
         for i_row in range(cw_height):
             for i_col in range(cw_width):
 
                 # 逐个生成格子
-                if crossword[i_row][i_col] is not '#':
+                if cw.crossword[i_row][i_col] is not '#':
                     self.textbox = QLineEdit(self)
                     self.textbox.move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
                     self.textbox.resize(self.cw_len, self.cw_len)
                     self.textbox.setAlignment(Qt.AlignCenter)
+                    self.textbox.setFont(QFont("Arial", 16))
                     self.textbox.setMaxLength(1)
                     textboxValue = self.textbox.text()
+
+    # 在首字母格的左上角 加上与中文释义相对应的序号
+    def addLabel(self, cw):
+        d_x = 2
+        d_y = -9
+        for word in cw.sortedList:
+            label = QLabel(self)
+            label.setText(str(cw.sortedList[word][2]['order']))
+            x = int(self.cw_loc[0] + cw.sortedList[word][2]['startPos'][1] * self.cw_len)
+            y = int(self.cw_loc[1] + cw.sortedList[word][2]['startPos'][0] * self.cw_len)
+            label.move(int(x + d_x), int(y + d_y))
+            label.setFont(QFont("Simsun", 8))
+
+
 
     # 显示中文释义
     def showDefinition(self, defCross, defDown):
