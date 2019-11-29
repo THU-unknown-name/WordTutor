@@ -240,7 +240,7 @@ class WordDict:
 			if iCount>=len(result):
 				break
 
-		with open(os.path.join(rootpath,'Original.txt'),"w") as fSave:
+		with open(os.path.join(rootpath,'Original.txt'),"w",encoding='utf-8') as fSave:
 			fSave.write(str(result))
 
 		Extract.ExtractToDir(result,rootpath)
