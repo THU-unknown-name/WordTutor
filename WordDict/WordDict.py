@@ -186,9 +186,11 @@ class WordDict:
 			#不在词典中，解决方案：1、上网爬取；2、显示错误信息
 			lSpace=Grep.Get(word,Grep.Info)
 			if lSpace!=None:
-				return Extract.Extract(lSpace)
-			else:
-				return WORD_NOT_FOUND
+				lResult=Extract.Extract(lSpace)
+				if len(lResult[0][0])>0 and len(lResult[0][1])>0:
+					return lResult
+
+			return WORD_NOT_FOUND
 		pass
 		#return [information,extra]
 

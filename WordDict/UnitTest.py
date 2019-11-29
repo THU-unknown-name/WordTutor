@@ -67,9 +67,7 @@ class Test_WordDict(unittest.TestCase):
 				self.assertTrue(all([len(x)==2 for x in reiku]))
 				self.assertTrue(all([type(x[0]) is str and type(x[1]) is str for x in reiku]))
 
-	def test_get_info(self):
-		src="abcdefghijilmnopqrstuvwxyzABCDEFGHIJILMNOPQRSTUVWXYZ."
-
+	def test_get_info_InDict(self):
 		WORD_DICT=WordDict.WordDict()
 		self.assertEqual(WORD_DICT.load("WordDict/dict"),WordDict.WORD_DICT_LOAD_SUCCEED)
 
@@ -77,6 +75,49 @@ class Test_WordDict(unittest.TestCase):
 		for (word,info) in WORD_DICT.navigate():
 			self.assertEqual(WORD_DICT.get_info(word),info)
 
+	def test_get_info_OutDict_Word(self):
+		WORD_DICT=WordDict.WordDict()
+		self.assertEqual(WORD_DICT.load("WordDict/dict"),WordDict.WORD_DICT_LOAD_SUCCEED)
+
+		self.assertEqual(WORD_DICT.get_wordlist(),WordDict.GET_WORDLIST_SUCCEED)
+
+		#OutDict
+		iFound=0
+		iTime=0
+		iLen=[5,20]
+		lFound=[]
+		lNotFound=[]
+
+		lWord=["hiking","playing","swam"]
+
+		for sWord in lWord:
+			if sWord not in WORD_DICT.word_list:
+				lResult=WORD_DICT.get_info(sWord)
+
+				if lResult==WordDict.WORD_NOT_FOUND:
+					lNotFound.append(sWord)
+				else:
+					lFound.append(sWord)
+					self.assertIs(type(lResult),list)
+					self.assertEqual(len(lResult),2)
+
+					self.assertIs(type(lResult[0]),list)
+					self.assertEqual(len(lResult[0]),2)
+					self.assertIs(type(lResult[0][0]),str)
+					self.assertIs(type(lResult[0][1]),str)
+
+					self.assertIs(type(lResult[1]),dict)
+
+					self.assertGreater(len(lResult[0][0]),0)
+					self.assertGreater(len(lResult[0][1]),0)
+				iTime+=1
+
+		print("Found rate %f%%\n\tFound %s\nNotFound %s"%(len(lFound)/iTime*100,lFound,lNotFound))
+
+
+	def test_get_info_OutDict_Rand(self):
+		WORD_DICT=WordDict.WordDict()
+		self.assertEqual(WORD_DICT.load("WordDict/dict"),WordDict.WORD_DICT_LOAD_SUCCEED)
 
 		self.assertEqual(WORD_DICT.get_wordlist(),WordDict.GET_WORDLIST_SUCCEED)
 
@@ -86,6 +127,9 @@ class Test_WordDict(unittest.TestCase):
 		iLen=[5,20]
 		lFound=[]
 		lNotFound=[]
+
+		src="abcdefghijilmnopqrstuvwxyzABCDEFGHIJILMNOPQRSTUVWXYZ."
+
 		for iLoop1 in range(iTime):
 			lLength=random.randint(*iLen)
 			while True:
@@ -108,7 +152,10 @@ class Test_WordDict(unittest.TestCase):
 						self.assertIs(type(lResult[0][1]),str)
 
 						self.assertIs(type(lResult[1]),dict)
-						print(lResult)
+
+						self.assertGreater(len(lResult[0][0]),0)
+						self.assertGreater(len(lResult[0][1]),0)
+
 					break
 
 		print("Found rate %f%%\n\tFound %s\nNotFound %s"%(len(lFound)/iTime*100,lFound,lNotFound))
