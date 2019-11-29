@@ -193,9 +193,9 @@ class WordDict:
 		#return [information,extra]
 
 	def get_sound(self, word):
-		'''获取发音文件路径\n
+		'''获取发音\n
 		output：\n
-			PathOfSound
+			Sound
 		'''
 		if word in self.__word_dict.keys():
 			return self.__word_dict[word][0][1]
@@ -203,6 +203,17 @@ class WordDict:
 			return WORD_NOT_FOUND
 		pass
 		#return PathOfSound
+
+	def get_mean(self, word):
+		'''获取释义\n
+		output：\n
+			meaning
+		'''
+		if word in self.__word_dict.keys():
+			return self.__word_dict[word][0][0]
+		else:
+			return WORD_NOT_FOUND
+		pass
 
 	@staticmethod
 	def update(wordlist,rootpath):
@@ -240,9 +251,9 @@ GET_WORDLIST_SUCCEED = 1
 
 if __name__ == "__main__":
 	WORD_DICT = WordDict()
-	#root0 = 'HappyWordTutorial\WordDict\dict'
+	root0 = 'HappyWordTutorial\WordDict\dict'
 	root = 'dict'
-	load_err = WORD_DICT.load(root)
+	load_err = WORD_DICT.load(root0)
 	if load_err != WORD_DICT_LOAD_SUCCEED:
 		print(load_err)
 		exit(0)

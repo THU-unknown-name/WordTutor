@@ -1,0 +1,12 @@
+[['', ''], {'hennkou': '', 'reiku': []}]
+[['', ''], {'hennkou': '', 'reiku': []}]
+Timeout
+Error
+[['', ''], {'hennkou': '', 'reiku': []}]
+Found rate 60.000000%
+	Found ['wuCqFrUsFpIIAw', 'mJUlOHIHlztHFH', 'PNijwzoBYOqpqvr']
+NotFound ['ObhxRpeBrN', 'JQibjEfILj.f']
+>>1/3
+>>2/3
+>>3/3
+3/3
