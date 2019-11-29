@@ -3,6 +3,7 @@
 from PyQt5.QtWidgets import * # QApplication, QWidget, QMainWindow, QLabel, QHBoxLayout
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import numpy as np
 
 class MainWindow(QMainWindow):
 
@@ -35,18 +36,55 @@ class MainWindow(QMainWindow):
     def showCrossword(self, cw):
         cw_height = cw.nRow
         cw_width = cw.nCol
+        my_regex = QRegExp("[a-zA-Z]")
+        flag = [[[]for i in range(cw_width)]for j in range(cw_height)]
+        self.textbox = [[] for i in range(len(cw.sortedList))]
+        self.textbox_word = []
+        for word in cw.sortedList.keys():
+            order = cw.sortedList[word][2]['order'] - 1
+            i_col = cw.sortedList[word][2]['startPos'][1]
+            i_row = cw.sortedList[word][2]['startPos'][0]
+            self.textbox_word.append(word)
+            if self.textbox[order] != []:
+                order += 1
+            for i in range(cw.sortedList[word][1]['len']):
+                if flag[i_row][i_col] != []:
+                    self.textbox[order].append(self.textbox[flag[i_row][i_col][0]][flag[i_row][i_col][1]])
+                    if cw.sortedList[word][2]['dir']:
+                        i_row += 1
+                    else:
+                        i_col += 1
+                    continue
+                self.textbox[order].append(QLineEdit(self))
+                self.textbox[order][i].move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
+                self.textbox[order][i].resize(self.cw_len, self.cw_len)
+                self.textbox[order][i].setAlignment(Qt.AlignCenter)
+                self.textbox[order][i].setFont(QFont("Arial", 16))
+                self.textbox[order][i].setMaxLength(1)
+                my_validator = QRegExpValidator(my_regex, self.textbox[order][i])
+                self.textbox[order][i].setValidator(my_validator)
+                flag[i_row][i_col] = [order, i]
+                if cw.sortedList[word][2]['dir']:
+                    i_row += 1
+                else:
+                    i_col += 1
+        print(self.textbox_word)
+        '''    
         for i_row in range(cw_height):
             for i_col in range(cw_width):
 
                 # 逐个生成格子
                 if cw.crossword[i_row][i_col] is not '#':
-                    self.textbox = QLineEdit(self)
-                    self.textbox.move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
-                    self.textbox.resize(self.cw_len, self.cw_len)
-                    self.textbox.setAlignment(Qt.AlignCenter)
-                    self.textbox.setFont(QFont("Arial", 16))
-                    self.textbox.setMaxLength(1)
-                    textboxValue = self.textbox.text()
+                    self.textbox[i_row][i_col] = QLineEdit(self)
+                    self.textbox[i_row][i_col].move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
+                    self.textbox[i_row][i_col].resize(self.cw_len, self.cw_len)
+                    self.textbox[i_row][i_col].setAlignment(Qt.AlignCenter)
+                    self.textbox[i_row][i_col].setFont(QFont("Arial", 16))
+                    self.textbox[i_row][i_col].setMaxLength(1)
+                    my_validator = QRegExpValidator(my_regex, self.textbox[i_row][i_col])
+                    self.textbox[i_row][i_col].setValidator(my_validator)
+                    textboxValue = self.textbox[i_row][i_col].text()
+        '''
 
     # 在首字母格的左上角 加上与中文释义相对应的序号
     def addLabel(self, cw):
@@ -81,3 +119,4 @@ class MainWindow(QMainWindow):
         dispDef.move(int(self.def_loc[0]), int(self.def_loc[1]))
         dispDef.setFont(QFont("Simsun", 20))
         dispDef.adjustSize()  # 根据文字自动调整控件大小
+

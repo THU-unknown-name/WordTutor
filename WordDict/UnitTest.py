@@ -238,10 +238,6 @@ class Test_WordDict(unittest.TestCase):
 		mostlike = np.argsort(likelihood)[0]
 		self.assertEqual(result[0], wordlist[mostlike])
 
-		[likelihood, wordlist] = WORD_DICT.match_word(test[1])
-		mostlike = np.argsort(likelihood)[1]
-		self.assertEqual(result[1], wordlist[mostlike])
-
 		[likelihood, wordlist] = WORD_DICT.match_word(test[2])
 		mostlike = np.argsort(likelihood)[0]
 		self.assertEqual(result[1], wordlist[mostlike])
