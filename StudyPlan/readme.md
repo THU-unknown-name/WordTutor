@@ -11,11 +11,11 @@ Vocab为一dict，其中key为单词，value为该单词的熟悉度
 
 添加了一些接口：
 
-* add_word_to_vocab(word):向词库表中添加一个单词
+* `add_word_to_vocab(word)`:向词库表中添加一个单词
 
-* remove_word_from_vocab(word)：从词库表中移除一个单词
+* `remove_word_from_vocab(word)`：从词库表中移除一个单词
 
-* get_n_word_from_familiarVocab(n)：从熟悉的单词中选取n个单词（用于游戏）
+* `get_n_word_from_familiarVocab(n)`：从熟悉的单词中选取n个单词（用于游戏）
 
 
 #### Vocab.pkl
@@ -32,19 +32,19 @@ todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 
 添加了一些接口：
 
-* set_stated_todaylist_length(length)：设置每日计划表的长度（此设定从第二天开始实行，不改变当天单词列表中的单词数目）
+* `set_stated_todaylist_length(length)`：设置每日计划表的长度（此设定从第二天开始实行，不改变当天单词列表中的单词数目）
 
-* get_stated_todaylist_length()：返回每日计划表的设定值
+* `get_stated_todaylist_length()`：返回每日计划表的设定值
 
-* update_current_word(index)：更新当前背到了哪个单词。每背完一个单词对其进行更新
+* `update_current_word(index)`：更新当前背到了哪个单词。每背完一个单词对其进行更新
 
-* get_current_word()：返回当前背到了哪个单词。每次打开软件时从今日计划表中该位置开始继续往下背
+* `get_current_word()`：返回当前背到了哪个单词。每次打开软件时从今日计划表中该位置开始继续往下背
 
-* add_word_to_todaylist(word)：添加单词到每日计划中 #***注意：此时并没有添加到词库中！如果需要添加到词库，需要调用Vocab.py中的接口
+* `add_word_to_todaylist(word)`：添加单词到每日计划中 #***注意：此时并没有添加到词库中！如果需要添加到词库，需要调用Vocab.py中的接口
 
-* get_n_word_from_todaylist(n)：从TodayList中返回n个单词用于游戏
+* `get_n_word_from_todaylist(n)`：从TodayList中返回n个单词用于游戏
 
-* save_todaylist()：将`__today_list`, `__vocab_num`, `__stated_vocab_num`, `__date`， `__current_word_index`等变量存到pickle文件中，运行时读取 # 注意：一定要在结束背单词的动作后执行该函数，保存数据！
+* `save_todaylist()`：将`__today_list`, `__vocab_num`, `__stated_vocab_num`, `__date`， `__current_word_index`等变量存到pickle文件中，运行时读取 # 注意：一定要在结束背单词的动作后执行该函数，保存数据！
 
 #### TodayList.pickle
 存储Todaylist的pickle文件
