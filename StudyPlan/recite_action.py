@@ -14,6 +14,7 @@ class ReciteWords:
         # Get todayList
         # self.today_list = ["test"]
         self.vocab = Vocab.Vocab()
+        self.vocab.saveVocab()  # 保存词库
         self.today_list = TodayList.TodayList(self.vocab).getTodayList()
         self.ite = 0
         self.review_list = []
@@ -143,7 +144,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         else:
             self.reciting.upgrade()
             self.finished_words_num += 1
-            self.progressBar.setValue((self.finished_words_num * 100.0)/self.total_words_num)
+            self.progressBar.setValue((self.finished_words_num * 100.0) / self.total_words_num)
         if self.reciting.next_word():
             self.update_word_info()
             self.forget_this_word = False

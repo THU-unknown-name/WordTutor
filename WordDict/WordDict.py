@@ -1,8 +1,8 @@
 import os
 import re
 import numpy as np
-import Grep
-import Extract
+from WordDict import Grep
+from WordDict import Extract
 
 class WordDict:
 	def __init__(self):
