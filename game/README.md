@@ -1,11 +1,11 @@
 # WordTutor
 Project for Software Engineering, THU 2019 Fall
 
-This is for the crossword game. Currently it's an unoptimzied basic algorithm to generate a crossword from an example word list.
+Generate a crossword game from an example word list.
 
-当前进度：给定单词，生成填词游戏并显示（目前算法不完备，debug+优化中）
+当前进度：给定单词，生成填词游戏并显示，增加了一些优化
 待完成：
-- [ ] 生成填词游戏的算法不完备，待优化
+- [x] 生成填词游戏的算法不完备，待优化
 - [ ] 数据库接口
 - [ ] 测评系统（检查是否正确、打分系统、进行下一轮游戏等）
 - [ ] 完善UI，（美化、按键等）
