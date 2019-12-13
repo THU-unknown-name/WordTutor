@@ -46,8 +46,6 @@ class MainWindow(QMainWindow):
     def showCrossword(self, cw):
         cw_height = cw.nRow
         cw_width = cw.nCol
-<<<<<<< HEAD
-=======
         my_regex = QRegExp("[a-zA-Z]")
         flag = [[[]for i in range(cw_width)]for j in range(cw_height)]
         self.textbox = [[] for i in range(len(cw.sortedList))]
@@ -88,21 +86,11 @@ class MainWindow(QMainWindow):
         self.current_focus = [current_row, current_col]
         print(self.textbox_word)
         '''    
->>>>>>> game
         for i_row in range(cw_height):
             for i_col in range(cw_width):
 
                 # 逐个生成格子
                 if cw.crossword[i_row][i_col] is not '#':
-<<<<<<< HEAD
-                    self.textbox = QLineEdit(self)
-                    self.textbox.move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
-                    self.textbox.resize(self.cw_len, self.cw_len)
-                    self.textbox.setAlignment(Qt.AlignCenter)
-                    self.textbox.setFont(QFont("Arial", 16))
-                    self.textbox.setMaxLength(1)
-                    textboxValue = self.textbox.text()
-=======
                     self.textbox[i_row][i_col] = QLineEdit(self)
                     self.textbox[i_row][i_col].move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
                     self.textbox[i_row][i_col].resize(self.cw_len, self.cw_len)
@@ -125,22 +113,6 @@ class MainWindow(QMainWindow):
             y = int(self.cw_loc[1] + cw.sortedList[word][2]['startPos'][0] * self.cw_len)
             label.move(int(x + d_x), int(y + d_y))
             label.setFont(QFont("Simsun", 8))
-
-
->>>>>>> game
-
-    # 在首字母格的左上角 加上与中文释义相对应的序号
-    def addLabel(self, cw):
-        d_x = 2
-        d_y = -9
-        for word in cw.sortedList:
-            label = QLabel(self)
-            label.setText(str(cw.sortedList[word][2]['order']))
-            x = int(self.cw_loc[0] + cw.sortedList[word][2]['startPos'][1] * self.cw_len)
-            y = int(self.cw_loc[1] + cw.sortedList[word][2]['startPos'][0] * self.cw_len)
-            label.move(int(x + d_x), int(y + d_y))
-            label.setFont(QFont("Simsun", 8))
-
 
 
     # 显示中文释义

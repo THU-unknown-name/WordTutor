@@ -15,6 +15,8 @@ from recite_action import ReciteGUI
 from game.ui_game import MainWindow as gameWindow
 from game.Crossword import MyCrossword
 from game.getWordList import wordList
+from game.getBestCrossword import *
+
 
 class Ui_MainWindow(object):
     def __init__(self, WORD_DICT):
@@ -68,14 +70,14 @@ class Ui_MainWindow(object):
         self.ui_recite=ReciteGUI()
         self.ui_recite.show()
     def game_window(self):
-        cw = MyCrossword()  # 初始化MyCrossword类
-        cw.generateCrossword(wordList)  # 根据单词列表生成填词游戏 （此为示例，待完成生词本接口）
+        cw = getBestCrossword(wordList)
         defCross = cw.getDefCross()    # 打印横向单词列表，获取中文释义
         defDown = cw.getDefDown()     # 打印纵向单词列表，获取中文释义
         self.ui_game = gameWindow()
         self.ui_game.initUI()
-        self.ui_game.showCrossword(cw.crossword)  # 显示空填词格
+        self.ui_game.showCrossword(cw)  # 显示空填词格
         self.ui_game.showDefinition(defCross, defDown)  # 显示中文释义
+        self.ui_game.addLabel(cw)
         self.ui_game.show()
         pass
     def retranslateUi(self, MainWindow):
