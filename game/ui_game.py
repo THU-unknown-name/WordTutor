@@ -4,6 +4,17 @@ from PyQt5.QtWidgets import * # QApplication, QWidget, QMainWindow, QLabel, QHBo
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+class myQLineEdit(QLineEdit):
+    def __init__(self, parent):
+        super(myQLineEdit, self).__init__(parent)
+        self.parent = parent
+    def keyPressEvent(self, a0):
+        if((a0.key() == Qt.Key_Up) | (a0.key() == Qt.Key_Down) | (a0.key() == Qt.Key_Left) | (a0.key() == Qt.Key_Right)):
+            self.parent.keyPressEvent(a0)
+        else:
+            super().keyPressEvent(a0)
+    pass
+
 class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -39,6 +50,7 @@ class MainWindow(QMainWindow):
         flag = [[[]for i in range(cw_width)]for j in range(cw_height)]
         self.textbox = [[] for i in range(len(cw.sortedList))]
         self.textbox_word = []
+        #self.textbox_map = [[[]for i in range(cw_width)]for j in range(cw_height)]
         for word in cw.sortedList.keys():
             order = cw.sortedList[word][2]['order'] - 1
             i_col = cw.sortedList[word][2]['startPos'][1]
@@ -54,7 +66,7 @@ class MainWindow(QMainWindow):
                     else:
                         i_col += 1
                     continue
-                self.textbox[order].append(QLineEdit(self))
+                self.textbox[order].append(myQLineEdit(self))
                 self.textbox[order][i].move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
                 self.textbox[order][i].resize(self.cw_len, self.cw_len)
                 self.textbox[order][i].setAlignment(Qt.AlignCenter)
@@ -67,6 +79,11 @@ class MainWindow(QMainWindow):
                     i_row += 1
                 else:
                     i_col += 1
+        self.textbox_map = flag
+        self.textbox[0][0].setFocus()
+        current_col = cw.sortedList[self.textbox_word[0]][2]['startPos'][1]
+        current_row = cw.sortedList[self.textbox_word[0]][2]['startPos'][0]
+        self.current_focus = [current_row, current_col]
         print(self.textbox_word)
         '''    
         for i_row in range(cw_height):
@@ -118,3 +135,37 @@ class MainWindow(QMainWindow):
         dispDef.move(int(self.def_loc[0]), int(self.def_loc[1]))
         dispDef.setFont(QFont("Simsun", 20))
         dispDef.adjustSize()  # 根据文字自动调整控件大小
+
+    def keyPressEvent(self, a0):
+        if(a0.key() == Qt.Key_Up):
+            tmp_col = self.current_focus[1]
+            tmp_row = self.current_focus[0] - 1
+            if(self.textbox_map[tmp_row][tmp_col] != []):
+                nextFocusTextBox = self.textbox_map[tmp_row][tmp_col]
+                self.textbox[nextFocusTextBox[0]][nextFocusTextBox[1]].setFocus()
+                self.current_focus = [tmp_row, tmp_col]
+        elif(a0.key() == Qt.Key_Down):
+            tmp_col = self.current_focus[1]
+            tmp_row = self.current_focus[0] + 1
+            if(self.textbox_map[tmp_row][tmp_col] != []):
+                nextFocusTextBox = self.textbox_map[tmp_row][tmp_col]
+                self.textbox[nextFocusTextBox[0]][nextFocusTextBox[1]].setFocus()
+                self.current_focus = [tmp_row, tmp_col]
+        elif(a0.key() == Qt.Key_Left):
+            tmp_col = self.current_focus[1] - 1
+            tmp_row = self.current_focus[0]
+            if(self.textbox_map[tmp_row][tmp_col] != []):
+                nextFocusTextBox = self.textbox_map[tmp_row][tmp_col]
+                self.textbox[nextFocusTextBox[0]][nextFocusTextBox[1]].setFocus()
+                self.current_focus = [tmp_row, tmp_col]
+        elif(a0.key() == Qt.Key_Right):
+            tmp_col = self.current_focus[1] + 1
+            tmp_row = self.current_focus[0]
+            if(self.textbox_map[tmp_row][tmp_col] != []):
+                nextFocusTextBox = self.textbox_map[tmp_row][tmp_col]
+                self.textbox[nextFocusTextBox[0]][nextFocusTextBox[1]].setFocus()
+                self.current_focus = [tmp_row, tmp_col]
+        else:
+            super().keyPressEvent(a0)
+            pass
+    
