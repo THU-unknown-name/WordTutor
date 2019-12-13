@@ -3,10 +3,10 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import *
 # GUI
-from StudyPlan.GUI import recite_gui
+from GUI import recite_gui
 # Vocab
-from StudyPlan import TodayList
-from StudyPlan import Vocab
+import TodayList
+import Vocab
 
 
 class ReciteWords:
@@ -172,9 +172,9 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         item.setText(_translate("MainWindow", "".join(info[1])))
 
 
-if __name__ == "__main__":
-    # GUI setup
-    app = QApplication(sys.argv)
-    recite_gui = ReciteGUI()
-    recite_gui.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     # GUI setup
+#     app = QApplication(sys.argv)
+#     recite_gui = ReciteGUI()
+#     recite_gui.show()
+#     sys.exit(app.exec_())

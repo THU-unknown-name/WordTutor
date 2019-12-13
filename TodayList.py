@@ -2,7 +2,7 @@ import os
 import pickle
 import datetime
 
-from StudyPlan import Vocab
+import Vocab
 from random import sample
 
 

@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from . import congrats
+import GUI.congrats
 
 
 class Ui_MainWindow(object):
@@ -32,10 +32,10 @@ class Ui_MainWindow(object):
         self.pushButton_next.setGeometry(QtCore.QRect(320, 470, 171, 71))
         self.pushButton_next.setObjectName("pushButton_next")
         self.label_stop_showing = QtWidgets.QLabel(self.centralwidget)
-        self.label_stop_showing.setGeometry(QtCore.QRect(350, 350, 111, 21))
+        self.label_stop_showing.setGeometry(QtCore.QRect(330, 350, 211, 21))
         self.label_stop_showing.setObjectName("label_stop_showing")
         self.label_show_again = QtWidgets.QLabel(self.centralwidget)
-        self.label_show_again.setGeometry(QtCore.QRect(350, 350, 111, 16))
+        self.label_show_again.setGeometry(QtCore.QRect(330, 350, 211, 16))
         self.label_show_again.setObjectName("label_show_again")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, 10, 121, 16))
@@ -65,7 +65,7 @@ class Ui_MainWindow(object):
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.listWidget.addItem(item)
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(80, 10, 721, 23))
+        self.progressBar.setGeometry(QtCore.QRect(100, 10, 701, 23))
         self.progressBar.setProperty("value", 24)
         self.progressBar.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.progressBar.setTextVisible(False)
@@ -78,9 +78,9 @@ class Ui_MainWindow(object):
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(200, 450, 421, 51))
+        self.label_3.setGeometry(QtCore.QRect(180, 450, 441, 51))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(15)
         self.label_3.setFont(font)
         self.label_3.setScaledContents(False)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
@@ -116,8 +116,8 @@ class Ui_MainWindow(object):
         self.pushButton_next.clicked.connect(self.label_show_again.hide)
         self.pushButton_next.clicked.connect(self.label_stop_showing.hide)
         self.pushButton_exit.clicked.connect(MainWindow.close)
+        MainWindow.setStyleSheet("#MainWindow{border-image:url(background1.jpg);}")
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))

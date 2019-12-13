@@ -1,5 +1,5 @@
-from StudyPlan import TodayList
-from StudyPlan import Vocab
+import TodayList
+import Vocab
 import random
 
 # 先生成词汇表vocab
