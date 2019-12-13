@@ -10,8 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 from lookup import look_up
-from recite import Ui_MainWindow3
-from recite_action import ReciteGUI
+from StudyPlan.recite_action import ReciteGUI
 from game.ui_game import MainWindow as gameWindow
 from game.Crossword import MyCrossword
 from game.getWordList import wordList
@@ -67,7 +66,7 @@ class Ui_MainWindow(object):
         self.ui_search=look_up(self.WORD_DICT)
         self.ui_search.show()
     def my_test(self):
-        self.ui_recite=ReciteGUI()
+        self.ui_recite=ReciteGUI(self.WORD_DICT)
         self.ui_recite.show()
     def game_window(self):
         cw = getBestCrossword(wordList)        

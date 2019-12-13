@@ -10,10 +10,10 @@ from StudyPlan import Vocab
 
 
 class ReciteWords:
-    def __init__(self):
+    def __init__(self, WORD_DICT):
         # Get todayList
         # self.today_list = ["test"]
-        self.vocab = Vocab.Vocab()
+        self.vocab = Vocab.Vocab(WORD_DICT)
         self.vocab.saveVocab()  # 保存词库
         self.today_list = TodayList.TodayList(self.vocab).getTodayList()
         self.ite = 0
@@ -75,8 +75,9 @@ class ReciteWords:
 class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
     complete_all = pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, WORD_DICT):
         super(ReciteGUI, self).__init__()
+        self.WORD_DICT = WORD_DICT
         self.setupUi(self)
         self.pushButton_revoke.setVisible(False)
         self.pushButton_next.setVisible(False)
@@ -102,7 +103,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.complete_all.connect(self.label_stop_showing.hide)
         self.complete_all.connect(self.pushButton_exit.show)
 
-        self.reciting = ReciteWords()
+        self.reciting = ReciteWords(self.WORD_DICT)
         self.forget_this_word = False
         self.update_word_info()
         self.finished_words_num = 0

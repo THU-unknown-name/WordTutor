@@ -47,7 +47,7 @@ class TodayList:
         else:
             print("Not existing TodayList......\n")
             input_num = eval(input("输入每天需要背诵的单词数:"))
-            if not (0 < input_num <= self.__total_vocab_num and isinstance(input_num, int)):
+            if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
                 raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
             self.__vocab_num = input_num
             self.__stated_vocab_num = input_num
@@ -99,7 +99,7 @@ class TodayList:
                 self.__familiarVocab_num = self.__vocab_num - self.__unfamiliarVocab_num - self.__newVocab_num
 
         # 测试用，打印每种词汇数量
-        # print(self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num)
+        print(self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num)
 
         # 将三种熟悉程度词汇依次添加到todayList中
         self.__today_list = sample(familiarVocabList, self.__familiarVocab_num)

@@ -18,10 +18,8 @@ class Vocab:
     返回值：无
     """
 
-    def __init__(self):
-        self.__wdDict = WordDict.WordDict()
-        self.__wdDict.load("../WordDict/dict")
-        self.__wdDict.get_wordlist()
+    def __init__(self, WORD_DICT):
+        self.__wdDict = WORD_DICT
 
         # 如果存在pickle文件，则直接从pickle文件中读取Vocab
         if os.path.exists('Vocab.pkl'):
@@ -34,7 +32,7 @@ class Vocab:
         else:
             print("Not Existing Vocab......\n")
             self.__vocab_dict = {}
-            for key in self.__wdDict.word_list:
+            for key, _ in self.__wdDict.navigate():
                 self.__vocab_dict[key] = FAMILIARITY_NEW
 
         # 为三种熟悉程度的单词分别创建一个列表，便于后续生成TodayList
