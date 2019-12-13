@@ -13,6 +13,7 @@ from PyQt5.QtGui import QPalette,QBrush,QPixmap
 from WordDict import WordDict
 import win32com.client
 import numpy as np
+from PyQt5.QtWidgets import QMessageBox
 
 
 def link(lList):
@@ -98,6 +99,7 @@ class look_up(QtWidgets.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.exit_Button.clicked.connect(self.close)
         self.sure_Button.clicked.connect(self.mysearchword)
+        self.add_Button.clicked.connect(self.add_to_wordkeeper)
         MainWindow.setStyleSheet("#MainWindow{border-image:url(background1.jpg);}")
 
 
@@ -110,7 +112,13 @@ class look_up(QtWidgets.QMainWindow):
 
     def add_to_wordkeeper(self):     #添加生词本
         word_to_add =  self.lineEdit.text()
-        '''添加word_to_add到生词本中的操作'''
+        reply = QMessageBox.question(self, 'Message', '是否确认添加?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            '''添加word_to_add到生词本中的操作'''
+            pass
+        else:
+            pass
     def mysearchword(self):           #搜索单词
         # WORD_DICT = WordDict.WordDict()
         # load_err = WORD_DICT.load('WordDict\\dict')
