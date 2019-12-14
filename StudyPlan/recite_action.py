@@ -55,7 +55,7 @@ class ReciteWords:
             else:
                 print("Fail to get recite list for today")
                 self.finished = True
-        else:
+        else:  # 今天的任务已经背完了
             QMessageBox.information(parent, '提醒', '你已经背完今天的单词了呢，注意劳逸结合哦~', QMessageBox.Yes)
             # parent.close()
             self.finished = True
@@ -222,9 +222,9 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.reciting.today_list_obj.save_todaylist()
 
 
-if __name__ == "__main__":
-    # GUI setup
-    app = QApplication(sys.argv)
-    recite_gui = ReciteGUI()
-    recite_gui.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     # GUI setup
+#     app = QApplication(sys.argv)
+#     recite_gui = ReciteGUI()
+#     recite_gui.show()
+#     sys.exit(app.exec_())
