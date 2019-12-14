@@ -14,7 +14,7 @@ from WordDict import WordDict
 import win32com.client
 import numpy as np
 from PyQt5.QtWidgets import QMessageBox
-
+from StudyPlan.Vocab import Vocab
 
 def link(lList):
     if type(lList) is list:
@@ -116,6 +116,8 @@ class look_up(QtWidgets.QMainWindow):
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             '''添加word_to_add到生词本中的操作'''
+            vocab = Vocab(self.WORD_DICT)
+            vocab.add_word_to_vocab(word_to_add)
             pass
         else:
             pass
