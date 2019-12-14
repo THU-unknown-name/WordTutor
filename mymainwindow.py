@@ -67,7 +67,8 @@ class Ui_MainWindow(object):
         self.ui_search.show()
     def my_test(self):
         self.ui_recite=ReciteGUI(self.WORD_DICT)
-        self.ui_recite.show()
+        if not self.ui_recite.finished:
+            self.ui_recite.show()
     def game_window(self):
         cw = getBestCrossword(wordList)        
         defCross = cw.getDefCross()    # 打印横向单词列表，获取中文释义

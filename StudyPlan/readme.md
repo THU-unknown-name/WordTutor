@@ -64,6 +64,7 @@ todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 
 * 完善由`pyuic`翻译出的recite_gui.py，定义slot和signal。
 * 完成背单词操作
+* 
 
 #### GUI/
 

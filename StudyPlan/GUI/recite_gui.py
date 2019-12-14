@@ -130,6 +130,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "今日进度"))
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
+        self.listWidget.setWordWrap(True)
         item = self.listWidget.item(0)
         item.setText(_translate("MainWindow", "word"))
         item = self.listWidget.item(1)
