@@ -17,6 +17,7 @@ class TodayList:
         self.__total_vocab_num = len(vocab.getVocabDict())
         self.__today_list = []
         self.__date = datetime.date.today()
+        self.new_user = False
         print("Today:", self.__date)
 
         # 模仿不同日期的代码（测试用）
@@ -46,13 +47,23 @@ class TodayList:
         # 如果还不存在pickle文件（即第一次使用程序），新建TodayList完成初始化
         else:
             print("Not existing TodayList......\n")
-            input_num = eval(input("输入每天需要背诵的单词数:"))
-            if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
-                raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
-            self.__vocab_num = input_num
-            self.__stated_vocab_num = input_num
-            self.__generate_today_list(vocab)
-            self.__current_word_index = 0
+            self.new_user = True
+            # input_num = eval(input("输入每天需要背诵的单词数:"))
+            # if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
+            #     raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+            # self.__vocab_num = input_num
+            # self.__stated_vocab_num = input_num
+            # self.__generate_today_list(vocab)
+            # self.__current_word_index = 0
+
+    # 为新用户生成今日计划
+    def plan_for_new_user(self, input_num, vocab):
+        if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
+            raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+        self.__vocab_num = input_num
+        self.__stated_vocab_num = input_num
+        self.__generate_today_list(vocab)
+        self.__current_word_index = 0
 
     # 由词库生成每日计划
     def __generate_today_list(self, vocab):

@@ -22,9 +22,9 @@ class Vocab:
         self.__wdDict = WORD_DICT
 
         # 如果存在pickle文件，则直接从pickle文件中读取Vocab
-        if os.path.exists('Vocab.pkl'):
+        if os.path.exists('StudyPlan/Vocab.pkl'):
             print("Existing Vocab......\n")
-            pkl_file = open('Vocab.pkl', 'rb')
+            pkl_file = open('StudyPlan/Vocab.pkl', 'rb')
             self.__vocab_dict = pickle.load(pkl_file)
             pkl_file.close()
 
@@ -112,9 +112,9 @@ class Vocab:
          """
         return self.__vocab_dict
 
-    # 将Vocab存储到pickle文件（Vocab.pkl）中便于下次读取
+    # 将Vocab存储到pickle文件（StudyPlan/Vocab.pkl）中便于下次读取
     def saveVocab(self):
-        output = open('Vocab.pkl', 'wb')
+        output = open('StudyPlan/Vocab.pkl', 'wb')
         # Pickle dictionary using protocol 0.
         pickle.dump(self.__vocab_dict, output)
         output.close()

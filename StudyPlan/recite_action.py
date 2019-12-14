@@ -1,6 +1,6 @@
 import sys
 # PyQt files
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 # GUI
 from StudyPlan.GUI import recite_gui
@@ -9,13 +9,40 @@ from StudyPlan import TodayList
 from StudyPlan import Vocab
 
 
+# class SetNumWindow(QWidget):
+#     def __init__(self):
+#         super(SetNumWindow).__init__()
+#         self.setWindowTitle("每日词量设置")
+#         self.resize(400, 300)
+#         self.num = 50
+#
+#         widget_hori = QVBoxLayout(self)
+#         label_hint = QLabel()
+#         label_hint.setText('请输入每天需要背诵的单词数量：')
+#         self.edit_num = QInputDialog()
+#         push_button_confirm = QPushButton('确定')
+#         widget_hori.addWidget(label_hint)
+#         widget_hori.addWidget(self.edit_num)
+#         widget_hori.addWidget(push_button_confirm)
+#
+#         # push_button_confirm.clicked.connect(self.close())
+#         push_button_confirm.clicked.connect(self.num_upd)
+#
+#     def num_upd(self):
+#         self.num = self.edit_num.getInt()
+
+
 class ReciteWords:
-    def __init__(self, WORD_DICT):
+    def __init__(self, WORD_DICT, parent=QWidget):
         # Get todayList
         # self.today_list = ["test"]
         self.vocab = Vocab.Vocab(WORD_DICT)
         self.vocab.saveVocab()  # 保存词库
-        self.today_list = TodayList.TodayList(self.vocab).getTodayList()
+        self.today_list_obj = TodayList.TodayList(self.vocab)
+        if self.today_list_obj.new_user:
+            value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量：', 50, 5, 700, 1)
+            self.today_list_obj.plan_for_new_user(value, self.vocab)
+        self.today_list = self.today_list_obj.getTodayList()
         self.ite = 0
         self.review_list = []
         self.is_first_round = True
@@ -103,7 +130,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.complete_all.connect(self.label_stop_showing.hide)
         self.complete_all.connect(self.pushButton_exit.show)
 
-        self.reciting = ReciteWords(self.WORD_DICT)
+        self.reciting = ReciteWords(self.WORD_DICT, self)
         self.forget_this_word = False
         self.update_word_info()
         self.finished_words_num = 0
@@ -166,7 +193,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         item = self.listWidget.item(0)
         item.setText(_translate("MainWindow", word))
         item = self.listWidget.item(1)
-        item.setText(_translate("MainWindow", info[0][0]))  # TODO: it is easy to break down
+        item.setText(_translate("MainWindow", info[0][0]))  # TODO: merge into a single line
         item = self.listWidget.item(2)
         item.setText(_translate("MainWindow", info[0][1]))
         item = self.listWidget.item(3)
