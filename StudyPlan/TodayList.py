@@ -17,6 +17,8 @@ class TodayList:
         self.__total_vocab_num = len(vocab.getVocabDict())
         self.__today_list = []
         self.__date = datetime.date.today()
+        self.new_user = False
+        self.__record_path = 'StudyPlan/TodayList.pkl'
         print("Today:", self.__date)
 
         # 模仿不同日期的代码（测试用）
@@ -24,9 +26,9 @@ class TodayList:
         # print("Today:", self.__date)
 
         # 从pickle文件中读取当前存储的todaylist
-        if os.path.exists('TodayList.pkl'):
+        if os.path.exists(self.__record_path):
             print("Existing TodayList......\n")
-            pkl_file = open('TodayList.pkl', 'rb')
+            pkl_file = open(self.__record_path, 'rb')
             todaylist_data = pickle.load(pkl_file)
             pkl_file.close()
             if self.__date == todaylist_data[3]:  # 如果当前打开程序和上次打开程序时同一天
@@ -35,6 +37,8 @@ class TodayList:
                 self.__stated_vocab_num = todaylist_data[2]
                 self.__today_list = todaylist_data[0]
                 self.__current_word_index = todaylist_data[4]  # 记录上次背到哪一个单词
+                self.finished_num = todaylist_data[5]  # 记录上次背了几个词
+                print('Have finished', self.finished_num)
 
             else:  # 如果是新的一天第一次打开程序
                 print("This run and last run are on the different day......")
@@ -42,17 +46,29 @@ class TodayList:
                 self.__stated_vocab_num = todaylist_data[2]  # 暂时不改变设定值
                 self.__generate_today_list(vocab)  # 生成新的计划表
                 self.__current_word_index = 0  # 之后从第1个单词开始背
+                self.finished_num = 0
 
         # 如果还不存在pickle文件（即第一次使用程序），新建TodayList完成初始化
         else:
             print("Not existing TodayList......\n")
-            input_num = eval(input("输入每天需要背诵的单词数:"))
-            if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
-                raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
-            self.__vocab_num = input_num
-            self.__stated_vocab_num = input_num
-            self.__generate_today_list(vocab)
-            self.__current_word_index = 0
+            self.new_user = True
+            # input_num = eval(input("输入每天需要背诵的单词数:"))
+            # if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
+            #     raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+            # self.__vocab_num = input_num
+            # self.__stated_vocab_num = input_num
+            # self.__generate_today_list(vocab)
+            # self.__current_word_index = 0
+
+    # 为新用户生成今日计划
+    def plan_for_new_user(self, input_num, vocab):
+        if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
+            raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+        self.__vocab_num = input_num
+        self.__stated_vocab_num = input_num
+        self.__generate_today_list(vocab)
+        self.__current_word_index = 0
+        self.finished_num = 0
 
     # 由词库生成每日计划
     def __generate_today_list(self, vocab):
@@ -68,31 +84,35 @@ class TodayList:
         familiarVocabList = vocab.getFamiliarVocabList()
 
         # 确认在todayList中每种词汇默认占多少
-        # 默认分配是：60%new + 30%unfamiliar + 10%familiar
+        # 默认分配是：60%new + 30%unfamiliar + 10%familiar -> 改成 60%new + 40% unfamiliar
         # 如果某一项词数不够（比如刚开始背的时候或者基本背完的时候），用其他类型词来补充
+        self.__familiarVocab_num = 0
         if len(newVocabList) >= int(self.__vocab_num * 0.6):
             self.__newVocab_num = int(self.__vocab_num * 0.6)
-            if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.3):
-                self.__unfamiliarVocab_num = int(self.__vocab_num * 0.3)
-                if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
-                    self.__familiarVocab_num = self.__vocab_num - self.__newVocab_num - self.__unfamiliarVocab_num
-                else:
-                    self.__familiarVocab_num = len(familiarVocabList)
-                    self.__unfamiliarVocab_num = self.__vocab_num - self.__newVocab_num - self.__familiarVocab_num
+            # if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.3):
+            if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.4):
+                # self.__unfamiliarVocab_num = int(self.__vocab_num * 0.3)
+                self.__unfamiliarVocab_num = int(self.__vocab_num * 0.4)
+                # if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
+                #     self.__familiarVocab_num = self.__vocab_num - self.__newVocab_num - self.__unfamiliarVocab_num
+                # else:
+                #     self.__familiarVocab_num = len(familiarVocabList)
+                #     self.__unfamiliarVocab_num = self.__vocab_num - self.__newVocab_num - self.__familiarVocab_num
             else:
                 self.__unfamiliarVocab_num = len(unfamiliarVocabList)
-                if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
-                    self.__familiarVocab_num = int(self.__vocab_num * 0.1)
-                else:
-                    self.__familiarVocab_num = len(familiarVocabList)
+                # if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
+                #     self.__familiarVocab_num = int(self.__vocab_num * 0.1)
+                # else:
+                #     self.__familiarVocab_num = len(familiarVocabList)
                 self.__newVocab_num = self.__vocab_num - self.__familiarVocab_num - self.__unfamiliarVocab_num
         else:
             self.__newVocab_num = len(newVocabList)
-            if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.3):
-                if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
-                    self.__familiarVocab_num = int(self.__vocab_num * 0.1)
-                else:
-                    self.__familiarVocab_num = len(familiarVocabList)
+            # if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.3):
+            if len(unfamiliarVocabList) >= int(self.__vocab_num * 0.4):
+                # if len(familiarVocabList) >= int(self.__vocab_num * 0.1):
+                #     self.__familiarVocab_num = int(self.__vocab_num * 0.1)
+                # else:
+                #     self.__familiarVocab_num = len(familiarVocabList)
                 self.__unfamiliarVocab_num = self.__vocab_num - self.__familiarVocab_num - self.__newVocab_num
             else:
                 self.__unfamiliarVocab_num = len(unfamiliarVocabList)
@@ -140,6 +160,17 @@ class TodayList:
         self.__current_word_index = index
         pass
 
+    # 更新今天没背完的词（退出背诵时调用）
+    def update_current_list(self, vocab):
+        # TODO: 但删掉的部分会被新词补全？这还不能用
+        for word in self.__today_list:
+            if vocab.getFamiliarity(word) > 2:
+                self.__today_list.remove(word)
+
+    # 记录已完成的词个数
+    def record_finished(self, num):
+        self.finished_num = num
+
     # 获取当前背到了哪个单词（一般在同一天多次打开程序时调用）
     def get_current_word(self):
         return self.__current_word_index
@@ -171,10 +202,11 @@ class TodayList:
     # 将__today_list, __vocab_num, __stated_vocab_num, __date， __current_word_index等变量存到pickle文件中，运行时读取
     # ***注意：一定要在结束背单词的动作后执行该函数，保存数据！
     def save_todaylist(self):
-        output = open('TodayList.pkl', 'wb')
+        output = open(self.__record_path, 'wb')
         # Pickle dictionary using protocol 0.
         todaylist_data = [self.__today_list, self.__vocab_num, self.__stated_vocab_num, self.__date,
-                          self.__current_word_index]
+                          self.__current_word_index, self.finished_num]
+        print('Have finished', self.finished_num)
         pickle.dump(todaylist_data, output)
         output.close()
         pass
