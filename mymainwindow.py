@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 from lookup import look_up
 from StudyPlan.recite_action import ReciteGUI
-from game.ui_game import MainWindow as gameWindow
+from game.ui_game import gameWindow
 from game.Crossword import MyCrossword
 #from game.getWordList import wordList
 from game.getBestCrossword import *
@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
         self.ui_recite.show()
     def game_window(self):
         vocab = Vocab(self.WORD_DICT)
-        word_list_for_game = vocab.get_n_word_from_familiarVocab(10)
+        word_list_for_game = vocab.get_n_word_from_familiarVocab(8)
         wordList = {}
         for word in word_list_for_game:
             word_mean = self.WORD_DICT.get_mean(word)
@@ -96,10 +96,11 @@ class Ui_MainWindow(object):
         defCross = cw.getDefCross()    # 打印横向单词列表，获取中文释义
         defDown = cw.getDefDown()     # 打印纵向单词列表，获取中文释义
         self.ui_game = gameWindow()
-        self.ui_game.initUI()
-        self.ui_game.showCrossword(cw)  # 显示空填词格
+        self.ui_game.initUI(cw)
+        self.ui_game.showCrossword()  # 显示空填词格
         self.ui_game.showDefinition(defCross, defDown)  # 显示中文释义
-        self.ui_game.addLabel(cw)
+        self.ui_game.addLabel()
+        self.ui_game.addButtons()
         self.ui_game.show()
         pass
     def retranslateUi(self, MainWindow):
