@@ -10,7 +10,9 @@ if __name__ == '__main__':
     WORD_DICT = WordDict.WordDict()
     ui = Ui_MainWindow(WORD_DICT)
     ui.setupUi(MainWindow)
-    MainWindow.setStyleSheet("#MainWindow{border-image:url(background1.jpg);}")
+    #MainWindow.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏边框
+    MainWindow.setStyleSheet('''#MainWindow{border-image:url(bak1.jpg);
+                                            }''')
     MainWindow.show()    
     #程序开始前，先读入词库数据库
     load_err = WORD_DICT.load('WordDict\\dict')
