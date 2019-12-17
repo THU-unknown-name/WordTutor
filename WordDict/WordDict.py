@@ -2,8 +2,8 @@ import os
 import re
 import copy
 import numpy as np
-from . import Grep
-from . import Extract
+from WordDict import Grep
+from WordDict import Extract
 
 class WordDict:
 	def __init__(self):
@@ -185,18 +185,35 @@ class WordDict:
 		mstr_len = len(match_str)
 		if(tstr_len == 0 or mstr_len == 0):
 			return 'The inputs must be strings'
-		matchs = [[[template_str[0]], [match_str[0]]]]
+		elif(tstr_len == 1 or mstr_len == 1):
+			if tstr_len == 1:
+				matchs = [[template_str[0], ''], [match_str[0], match_str[1:]]]
+			else:
+				matchs = [[template_str[0], template_str[1:]], [match_str[0], '']]
+			return [(1 << abs(tstr_len - mstr_len)) + 2, matchs]
 		Wold = np.zeros(tstr_len, dtype='int')
 		Wnew = np.zeros(tstr_len, dtype='int')
 		error_block = np.zeros(tstr_len, dtype='int')
 		minW = 0
-		for i in range(1, tstr_len):
+		matchs = [[[template_str[0]], [match_str[0:2]]]]
+		matchs.append([[template_str[0], template_str[1]], [match_str[0], match_str[1]]])
+		Wnew[0] = 6
+		if(template_str[1] != match_str[1]):
+			Wnew[1] = 4
+			error_block[1] = 1
+		for i in range(2, tstr_len):
 			matchs.append([[template_str[0]], [match_str[0]]])
-			matchs[i][0].append(template_str[1:i+1])
+			matchs[i][0].append(template_str[1:i])
 			matchs[i][1].append('')
+			matchs[i][0].append(template_str[i])
+			matchs[i][1].append(match_str[1])
 			error_block[i] = 1
-			Wnew[i] = 2 + (1 << i)
-		for i in range(1, mstr_len):
+			Wold[i] = 2 + (1 << (i - 1))
+			Wnew[i] = 2 + (1 << (i - 1))
+			if(template_str[i] != match_str[1]):
+				Wnew[i] += 2
+
+		for i in range(2, mstr_len):
 			for j in range(1, tstr_len + 1):
 				matchs_tmp = []
 				Wnew_tmp = np.zeros(tstr_len-j+1, dtype='int')
@@ -327,15 +344,15 @@ GET_WORDLIST_SUCCEED = 1
 if __name__ == "__main__":
 	WORD_DICT = WordDict()
 	root0 = 'HappyWordTutorial\WordDict\dict'
-	root = 'dict'
+	root = 'WordDict\dict'
 	load_err = WORD_DICT.load(root0)
 	if load_err != WORD_DICT_LOAD_SUCCEED:
 		print(load_err)
 		exit(0)
-	[W, match] = WORD_DICT.matcher('afternoon', 'after')
+	[W, match] = WORD_DICT.matcher0('process', 'pass')
 	print(W)
 	print(match)
-	[likelihood, wordlist] = WORD_DICT.match_word('afternoon')
+	[likelihood, wordlist] = WORD_DICT.match_word('process')
 	top5index = np.argsort(likelihood)[:5]
 	top5word = [wordlist[i] for i in top5index]
 	print(likelihood[top5index])

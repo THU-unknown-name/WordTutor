@@ -169,6 +169,16 @@ class Test_WordDict(unittest.TestCase):
 		#InDict
 		for (word,info) in WORD_DICT.navigate():
 			self.assertEqual(WORD_DICT.get_sound(word),info[0][1])
+	
+	def test_get_mean(self):
+		src="abcdefghijilmnopqrstuvwxyzABCDEFGHIJILMNOPQRSTUVWXYZ."
+
+		WORD_DICT=WordDict.WordDict()
+		self.assertEqual(WORD_DICT.load("WordDict/dict"),WordDict.WORD_DICT_LOAD_SUCCEED)
+
+		#InDict
+		for (word,info) in WORD_DICT.navigate():
+			self.assertEqual(WORD_DICT.get_mean(word),info[0][0])
 
 	def test_update(self):
 		lWord=["shadow","escalator","swim"]
