@@ -70,7 +70,7 @@ class ReciteWords:
             return false
         """
         while True:  # 找到下一个不是已完成的单词
-        # today_list_dict: 0 -- 没背过；1 -- 背过没记住；2 -- 已经背过了（或者没记住然后记住了）
+            # today_list_dict: 0 -- 没背过；1 -- 背过没记住；2 -- 已经背过了（或者没记住然后记住了）
             self.ite += 1
             if self.ite >= len(self.today_list):
                 self.today_list = self.review_list.copy()
@@ -222,9 +222,9 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
     def closeEvent(self, event):
         print("Close event activated.")
         self.reciting.vocab.saveVocab()
-        self.reciting.today_list_obj.record_finished(self.finished_words_num, self.reciting.today_list_dict)  # 为了下次能够显示已经背的词数
+        self.reciting.today_list_obj.record_finished(self.finished_words_num,
+                                                     self.reciting.today_list_dict)  # 为了下次能够显示已经背的词数
         self.reciting.today_list_obj.save_todaylist()
-
 
 # if __name__ == "__main__":
 #     # GUI setup
