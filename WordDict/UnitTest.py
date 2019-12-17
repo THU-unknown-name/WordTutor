@@ -229,12 +229,12 @@ class Test_WordDict(unittest.TestCase):
 
 		test = ["afternoon", "apterno", "aternoon"]
 		result = [['a','f','t','e','r','n','o','on'],['a','p','t','e','r','n','o','']]
-		[W, match] = WORD_DICT.matcher0(test[0], test[1])
+		[W, match] = WORD_DICT.matcher(test[0], test[1])
 		self.assertListEqual(match, result)
 		self.assertEqual(W, 10)
 
 		result = [['a','f','t','e','r','n','o','o','n'],['a','','t','e','r','n','o','o','n']]
-		[W, match] = WORD_DICT.matcher0(test[0], test[2])
+		[W, match] = WORD_DICT.matcher(test[0], test[2])
 		self.assertListEqual(match, result)
 		self.assertEqual(W, 4)
 
