@@ -11,15 +11,29 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 from lookup import look_up
 from StudyPlan.recite_action import ReciteGUI
-from game.ui_game import MainWindow as gameWindow
+from game.ui_game import gameWindow
 from game.Crossword import MyCrossword
-from game.getWordList import wordList
+#from game.getWordList import wordList
 from game.getBestCrossword import *
+from StudyPlan.Vocab import Vocab
+from WordDict.WordDict import *
 
+
+class ErrorWin(object):
+    def __init__(self):
+        self.errorWin = QtWidgets.QWidget()
+
+    def show_error(self, error_msg):
+        reply = QtWidgets.QMessageBox.question(self.errorWin, 'Message', 
+            error_msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.Yes)
+        if reply == QtWidgets.QMessageBox.Yes:
+            pass
 
 class Ui_MainWindow(object):
     def __init__(self, WORD_DICT):
         self.WORD_DICT = WORD_DICT
+        self.errorWin = ErrorWin()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -70,14 +84,24 @@ class Ui_MainWindow(object):
         if not self.ui_recite.finished:
             self.ui_recite.show()
     def game_window(self):
+        vocab = Vocab(self.WORD_DICT)
+        word_list_for_game = vocab.get_n_word_from_familiarVocab(8)
+        wordList = {}
+        for word in word_list_for_game:
+            word_mean = self.WORD_DICT.get_mean(word)
+            if word_mean == WORD_NOT_FOUND:
+                self.errorWin.show_error("The meaning of the word:{} not found".format(word))
+                return
+            wordList[word] = [[word_mean], {}]
         cw = getBestCrossword(wordList)        
         defCross = cw.getDefCross()    # 打印横向单词列表，获取中文释义
         defDown = cw.getDefDown()     # 打印纵向单词列表，获取中文释义
         self.ui_game = gameWindow()
-        self.ui_game.initUI()
-        self.ui_game.showCrossword(cw)  # 显示空填词格
+        self.ui_game.initUI(cw)
+        self.ui_game.showCrossword()  # 显示空填词格
         self.ui_game.showDefinition(defCross, defDown)  # 显示中文释义
-        self.ui_game.addLabel(cw)
+        self.ui_game.addLabel()
+        self.ui_game.addButtons()
         self.ui_game.show()
         pass
     def retranslateUi(self, MainWindow):

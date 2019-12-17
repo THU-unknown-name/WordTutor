@@ -48,7 +48,7 @@ class MyCrossword(object):
 
         self.crossword = [[]]  # 存放填词游戏
         # self.bestCrossword = [[]]
-        self.wordList = []  # 单词列表
+        self.wordList = {}  # 单词列表
         self.nRow = self.crossword.__len__()  # 填词格行数
         self.nCol = self.crossword[0].__len__()  # 填词格列数
         self.placed = {}  # 记录已放置好的单词
@@ -77,16 +77,17 @@ class MyCrossword(object):
 
     def generateCrossword(self, wordList):
         crossword = [[]]
-        self.wordList = wordList
-        for new in self.wordList:
-            self.wordList[new][1]['len'] = new.__len__()
+        self.wordList = {}
+        for word in wordList:
+            self.wordList[word] = wordList[word] + [{}]
+            self.wordList[word][2]['len'] = word.__len__()
 
         if self.testMode: print(self.wordList)
 
         sortedList = sorted(self.wordList, key=lambda d: d.__len__(), reverse=True)
 
-        for i, word in enumerate(sortedList):
-            self.wordList[word][1]['id'] = i
+        # for i, word in enumerate(sortedList):
+        #     self.wordList[word][2]['id'] = i
 
         if self.testMode: print('sorted: ', sortedList)
 
@@ -349,14 +350,17 @@ class MyCrossword(object):
 
         # 将单词列表或划分为纵向和横向两个子列表
         tmp_pos = -1  # 如果有起始位置相同的单词，序号也相同
-        tmp_order = -1
+        tmp_order = 0
         for i, (word, param) in enumerate(getWordOrder):
             cur_dir = param[1]
+            self.placed[word]['id'] = i
             if param[0] == tmp_pos:
                 self.placed[word]['order'] = tmp_order
             else:
-                self.placed[word]['order'] = i + 1
-            self.sortedList[word] = [self.wordList[word][0], self.wordList[word][1], self.placed[word]]
+                self.placed[word]['order'] = tmp_order + 1
+
+            self.sortedList[word] = [self.wordList[word][0], self.wordList[word][2], self.placed[word]]
+
             if cur_dir == 0:
                 self.listCross[word] = self.sortedList[word]
             elif cur_dir == 1:
@@ -368,33 +372,66 @@ class MyCrossword(object):
 
 
     # 获取所有单词的中文释义
-    def getDefAll(self):
-        print("\nall: ")
+    def getDefinitions(self, wordList):
+        MAX_SPLIT = 4
         definitions = []
-        for i, word in enumerate(self.sortedList):
-            definitions.append([self.sortedList[word][2]['order'], self.sortedList[word][0][0], word])
-            print(definitions[i])
+        for i, word in enumerate(wordList):
+            raw_def = self.sortedList[word][0][0]
+            tmp = raw_def.split('\n', MAX_SPLIT + 1)
+            if MAX_SPLIT - 1 < tmp.__len__():
+
+                if tmp[MAX_SPLIT - 1][tmp[MAX_SPLIT - 1].__len__() - 1] is '.' and MAX_SPLIT < tmp.__len__():
+                    numShow = min(MAX_SPLIT + 1, tmp.__len__())
+                else:
+                    numShow = min(MAX_SPLIT, tmp.__len__())
+
+            else:
+                numShow = min(MAX_SPLIT, tmp.__len__())
+
+            show_def = ''
+            for i in range(numShow):
+                if tmp[i][tmp[i].__len__() - 1] is '.':
+                    if i != 0:
+                        show_def += '\n    '
+                    show_def += tmp[i]
+                    show_def += ' '
+                else:
+                    show_def += tmp[i]
+
+            if self.testMode: print(show_def)
+
+            definitions.append([self.sortedList[word][2]['order'], show_def, word])
+
+        return definitions
+
+    def getDefAll(self, isPrint = False):
+        definitions = self.getDefinitions(self.sortedList)
+        if isPrint:
+            print("all: ")
+            for item in definitions:
+                print(item)
+
+            print('')
+        return definitions
 
     # 获取横向单词的中文释义
-    def getDefCross(self):
-        print("cross: ")
-        definitions = []
-        for i, word in enumerate(self.listCross):
-            # print(self.listCross[word])
-            definitions.append([self.listCross[word][2]['order'], self.listCross[word][0][0], word])
-            print(definitions[i])
+    def getDefCross(self, isPrint = False):
+        definitions = self.getDefinitions(self.listCross)
+        if isPrint:
+            print("cross: ")
+            for item in definitions:
+                print(item)
 
-        print('')
+            print('')
         return definitions
 
     # 获取纵向单词的中文释义
-    def getDefDown(self):
-        print("down: ")
-        definitions = []
-        for i, word in enumerate(self.listDown):
-            # print(self.listDown[word])
-            definitions.append([self.listDown[word][2]['order'], self.listDown[word][0][0], word])
-            print(definitions[i])
+    def getDefDown(self, isPrint = False):
+        definitions = self.getDefinitions(self.listDown)
+        if isPrint:
+            print("down: ")
+            for item in definitions:
+                print(item)
 
-        print('')
+            print('')
         return definitions
