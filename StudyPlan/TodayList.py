@@ -15,7 +15,7 @@ class TodayList:
         返回值：无
         """
         self.__total_vocab_num = len(vocab.getVocabDict())
-        self.__today_list = []
+        self.__today_list = {}
         self.__date = datetime.date.today()
         self.new_user = False
         self.__record_path = 'StudyPlan/TodayList.pkl'
@@ -122,18 +122,20 @@ class TodayList:
         print(self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num)
 
         # 将三种熟悉程度词汇依次添加到todayList中
-        self.__today_list = sample(familiarVocabList, self.__familiarVocab_num)
-        self.__today_list.extend(sample(unfamiliarVocabList, self.__unfamiliarVocab_num))
-        self.__today_list.extend(sample(newVocabList, self.__newVocab_num))
-        pass
+        today_list = sample(familiarVocabList, self.__familiarVocab_num)
+        today_list.extend(sample(unfamiliarVocabList, self.__unfamiliarVocab_num))
+        today_list.extend(sample(newVocabList, self.__newVocab_num))
+        self.__today_list = {word: 0 for word in today_list}
+        # print(self.__today_list)
 
     def getTodayList(self):
         """
          函数名：getTodayList
          参数：无
          作用：返回todayList（每日计划表）
-         返回值：list（如['a', 'baby', 'cat'...]）
+         返回值：dict（如['a':0, 'baby':0, 'cat':0...]）
          """
+        print(self.__today_list)
         return self.__today_list
 
     # 设置每日计划表的长度（此设定从第二天开始实行）
@@ -168,8 +170,9 @@ class TodayList:
                 self.__today_list.remove(word)
 
     # 记录已完成的词个数
-    def record_finished(self, num):
+    def record_finished(self, num, today_list_dict):
         self.finished_num = num
+        self.__today_list = today_list_dict
 
     # 获取当前背到了哪个单词（一般在同一天多次打开程序时调用）
     def get_current_word(self):
