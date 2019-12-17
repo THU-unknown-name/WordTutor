@@ -38,7 +38,7 @@ todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 
 * `get_current_word()`：返回当前背到了哪个单词。每次打开软件时从今日计划表中该位置开始继续往下背
 
-* `add_word_to_todaylist(word)`：添加单词到每日计划中 **#注意：此时并没有添加到词库中！如果需要添加到词库，需要调用Vocab.py中的接口**
+* `add_word_to_todaylist(word, vocab)`：添加单词到每日计划中 **此时默认添加到了词库中**
 
 * `get_n_word_from_todaylist(n)`：从TodayList中返回n个单词用于游戏
 
