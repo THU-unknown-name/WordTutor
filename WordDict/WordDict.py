@@ -100,8 +100,8 @@ class WordDict:
 				likelihood[num] = 0
 			else:
 				#首字母相同，求相似度
-				[likelihood_0, _] = self.matcher(mword, word)
-				[likelihood_1, _] = self.matcher(word, mword)
+				[likelihood_0, _] = self.matcher0(mword, word)
+				[likelihood_1, _] = self.matcher0(word, mword)
 				likelihood[num] = min(likelihood_0, likelihood_1)
 
 		return [likelihood,wordlist]
@@ -160,6 +160,79 @@ class WordDict:
 					matchs[-j][1].append(match_str[i])
 					if(template_str[-j] != match_str[i]):
 						Wnew[-j] += 2 + (1 << (error_block[-j] + 1))
+			#print(matchs)
+		for i in range(tstr_len-1):
+			matchs[i][0].append(template_str[i+1:])
+			matchs[i][1].append('')
+			Wnew[i] += (1 << (len(matchs[i][0][-1]) >> 1)) + \
+				(1 << (error_block[i] + 1))
+		#print(matchs)
+		minW = np.argmin(Wnew)
+		return [Wnew[minW], matchs[minW]]
+		pass
+
+	def matcher0(self, template_str, match_str):	
+		'''采用DTW算法进行字符串匹配\n
+		input:\n
+			template_str:模板字符串\n
+			match_str:需要匹配的字符串\n
+		output:\n
+			list[score, match]:\n
+				score:匹配度，值越小匹配度越高，最小为0\n
+				match:匹配情况
+		'''
+		tstr_len = len(template_str)
+		mstr_len = len(match_str)
+		if(tstr_len == 0 or mstr_len == 0):
+			return 'The inputs must be strings'
+		matchs = [[[template_str[0]], [match_str[0]]]]
+		Wold = np.zeros(tstr_len, dtype='int')
+		Wnew = np.zeros(tstr_len, dtype='int')
+		error_block = np.zeros(tstr_len, dtype='int')
+		minW = 0
+		for i in range(1, tstr_len):
+			matchs.append([[template_str[0]], [match_str[0]]])
+			matchs[i][0].append(template_str[1:i+1])
+			matchs[i][1].append('')
+			error_block[i] = 1
+			Wnew[i] = 2 + (1 << i)
+		for i in range(1, mstr_len):
+			for j in range(1, tstr_len + 1):
+				matchs_tmp = []
+				Wnew_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				Wold_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				error_block_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				for minW in range(0, tstr_len-j+1):
+					matchs_tmp.append(copy.deepcopy(matchs[minW]))
+					error_block_tmp[minW] = error_block[minW]
+					if(minW == tstr_len - j):
+						matchs_tmp[minW][1][-1] += match_str[i]
+						matchs_tmp[minW][0][-1] = template_str[minW]
+						Wnew_tmp[minW] = Wold[minW] + (1 << len(matchs_tmp[minW][1][-1])) + \
+							(1 << (error_block_tmp[minW] + 1))
+						Wold_tmp[minW] = Wold[-j]
+					else:
+						if(matchs_tmp[minW][0][-1] != matchs_tmp[minW][1][-1]):
+							error_block_tmp[minW] += 1
+						if(minW < tstr_len - j - 1):
+							matchs_tmp[minW][0].append(template_str[minW+1:-j])
+							matchs_tmp[minW][1].append('')
+							error_block_tmp[minW] += 1
+							Wnew_tmp[minW] = Wnew[minW] + (1 << (tstr_len - j - minW - 1)) + \
+								(1 << error_block_tmp[minW])
+							Wold_tmp[minW] = Wnew_tmp[minW]
+						else:
+							Wnew_tmp[minW] = Wnew[minW]
+							Wold_tmp[minW] = Wnew_tmp[minW]
+						matchs_tmp[minW][0].append(template_str[-j])
+						matchs_tmp[minW][1].append(match_str[i])
+						if(template_str[-j] != match_str[i]):
+							Wnew_tmp[minW] += 2 + (1 << (error_block_tmp[minW] + 1))
+
+				best = np.argmin(Wnew_tmp)
+				Wnew[-j] = Wnew_tmp[best]
+				Wold[-j] = Wold_tmp[best]
+				matchs[-j] = copy.deepcopy(matchs_tmp[best])
 			#print(matchs)
 		for i in range(tstr_len-1):
 			matchs[i][0].append(template_str[i+1:])
