@@ -136,7 +136,11 @@ class gameWindow(QMainWindow):
         dispDef = QLabel(self)
         dispDef.setText(text)
         dispDef.move(int(self.def_loc[0]), int(self.def_loc[1]))
-        dispDef.setFont(QFont("Simsun", 16))
+        dispDef.setFont(QFont("Simsun", 13))
+        dispDef.setStyleSheet('''
+                            QLabel{border:none;color:white;font-weight:700;
+                                }
+                        ''')
         dispDef.adjustSize()  # 根据文字自动调整控件大小
 
     # 按键
@@ -144,11 +148,25 @@ class gameWindow(QMainWindow):
         self.showAns = QPushButton('显示答案', self)
         self.showAns.setGeometry(QRect(150, 500, 120, 41))
         self.showAns.clicked.connect(self.showAnswer)
-
+        self.showAns.setStyleSheet('''
+                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                        ''')
         self.hideAns = QPushButton('隐藏答案', self)
         self.hideAns.setGeometry(QRect(150, 500, 120, 41))
         self.hideAns.clicked.connect(self.hideAnswer)
         self.hideAns.setVisible(False)
+        self.hideAns.setStyleSheet('''
+                                                    QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                                ''')
+        self.exit = QPushButton('退出', self)
+        self.exit.setGeometry(QRect(300, 500, 120, 41))
+        self.exit.clicked.connect(self.close)
+        self.exit.setStyleSheet('''
+                                                    QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                                ''')
 
     # 显示答案
     def showAnswer(self):
