@@ -121,17 +121,27 @@ class Vocab:
         output.close()
         pass
 
+    # 确定一个单词是否为有效的单词
+    def word_is_valid(self, word):
+        if self.__wdDict.get_info(word) == WordDict.WORD_NOT_FOUND:
+            return False
+        else:
+            return True
+
     # 为Vocab添加一个单词（添加单词默认熟悉度为0）
     def add_word_to_vocab(self, word):
         """
          函数名：add_word_to_vocab
          参数：添加的单词 word
          作用：为Vocab添加一个单词，且默认其熟悉度为0
-         返回值：无
+         返回值：False（添加失败，比如输入的不是一个正确的单词） or True（添加成功）
          """
-        self.__vocab_dict[word] = 0
-        self.saveVocab()
-        pass
+        if self.word_is_valid(word):
+            self.__vocab_dict[word] = 0
+            self.saveVocab()
+            return True
+        else:
+            return False
 
     # 为Vocab删除一个单词
     def remove_word_from_vocab(self, word):
@@ -153,13 +163,16 @@ class Vocab:
          函数名：get_n_word_from_familiarVocab
          参数：单词个数 n
          作用：从熟悉单词列表中随机抽取n个单词，供游戏环节使用
-         返回值：list（如：['afternoon','cat',...]）
+         返回值：list（如：['afternoon','cat',...].如果生成失败则返回空列表，可以通过检测返回列表的长度确定是否成功获取）
          """
         familiar_vocab_List = []
         for key, value in self.__vocab_dict.items():
             if value == FAMILIARITY_FAMILIAR:
                 familiar_vocab_List.append(key)
-        return sample(familiar_vocab_List, n)
+        if 0 < n <= len(familiar_vocab_List):
+            return sample(familiar_vocab_List, n)
+        else:
+            return []
 
     # 显示vocab中所有项（调试时使用）
     def display(self):
