@@ -1,5 +1,3 @@
-# 游戏UI界面：目前仅显示空的填词格和中文释义
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -48,9 +46,14 @@ class gameWindow(QMainWindow):
         # self.textbox = []
         self.testMode = False
 
-
-    # 初始化窗口
     def initUI(self, cw, WORD_DICT, errorWin):
+        '''
+        # 初始化窗口
+        :param cw: 填词游戏
+        :param WORD_DICT: 词典
+        :param errorWin: 窗口报错接口
+        :return:
+        '''
         self.WORD_DICT =WORD_DICT
         self.errorWin = errorWin
         self.cw = cw
@@ -67,45 +70,43 @@ class gameWindow(QMainWindow):
         '''
         添加按键
         '''
-        self.showAns = QPushButton('显示答案', self)
-        self.showAns.setGeometry(QRect(150, self.btn_top, 100, 41))
-        self.showAns.clicked.connect(self.showAnswer)
-        self.showAns.setStyleSheet('''
-                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                                        ''')
-        self.hideAns = QPushButton('隐藏答案', self)
-        self.hideAns.setGeometry(QRect(150, self.btn_top, 100, 41))
-        self.hideAns.clicked.connect(self.hideAnswer)
-        self.hideAns.setVisible(False)
-        self.hideAns.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                    ''')
-
         self.checkAns = QPushButton('检查答案', self)
         self.checkAns.setGeometry(QRect(270, self.btn_top, 100, 41))
         self.checkAns.clicked.connect(self.checkAnswer)
         self.checkAns.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                        ''')
-
-        self.exit = QPushButton('退出', self)
-        self.exit.setGeometry(QRect(390, self.btn_top, 100, 41))
-        self.exit.clicked.connect(self.close)
-        self.exit.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                        ''')
-
+                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                            ''')
         self.nextGame = QPushButton('下一轮', self)
-        self.nextGame.setGeometry(QRect(510, self.btn_top, 100, 41))
+        self.nextGame.setGeometry(QRect(390, self.btn_top, 100, 41))
         self.nextGame.clicked.connect(self.getNextGame)
         self.nextGame.setStyleSheet('''
-                                    QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                            ''')
+        self.exit = QPushButton('退出', self)
+        self.exit.setGeometry(QRect(510, self.btn_top, 100, 41))
+        self.exit.clicked.connect(self.close)
+        self.exit.setStyleSheet('''
+                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                            ''')
+        if self.testMode:
+            self.showAns = QPushButton('显示答案', self)
+            self.showAns.setGeometry(QRect(150, self.btn_top, 100, 41))
+            self.showAns.clicked.connect(self.showAnswer)
+            self.showAns.setStyleSheet('''
+                                        QPushButton{border:none;color:white;font-size:25px;font-weight:700;
                                         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                                ''')
+                                        ''')
+            self.hideAns = QPushButton('隐藏答案', self)
+            self.hideAns.setGeometry(QRect(150, self.btn_top, 100, 41))
+            self.hideAns.clicked.connect(self.hideAnswer)
+            self.hideAns.setVisible(False)
+            self.hideAns.setStyleSheet('''
+                                        QPushButton{border:none;color:white;font-size:25px;font-weight:700;
+                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                        ''')
 
     def checkOverlap(self):
         '''
@@ -179,6 +180,7 @@ class gameWindow(QMainWindow):
                 self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s;" % self.tbEdgeColor)
                 my_validator = QRegExpValidator(my_regex, self.textbox[word_id][i])
                 self.textbox[word_id][i].setValidator(my_validator)
+                self.textbox[word_id][i].setEnabled(True)
                 flag[i_row][i_col] = [word_id, i]
                 if self.cw.sortedList[word][2]['dir']:
                     i_row += 1
@@ -218,17 +220,21 @@ class gameWindow(QMainWindow):
             for textbox in item:
                 textbox.deleteLater()
 
+        if 'hideAns' in vars(self): self.hideAns.setVisible(False)
+        if 'showAns' in vars(self): self.showAns.setVisible(False)
         self.textbox = [[] for i in range(len(self.cw.sortedList))]
         self.label = []
+        self.checkAns.setEnabled(True)
 
     def checkAnswer(self):
         '''
-        检查答案
+        检查并显示答案
         :return:
         '''
-        print('检查答案！')
+        if self.testMode: print('检查答案！')
         cw_height = self.cw.nRow
         cw_width = self.cw.nCol
+        self.checkAns.setEnabled(False)
         for i_row in range(cw_height):
             for i_col in range(cw_width):
                 # 逐个生成格子
@@ -237,17 +243,15 @@ class gameWindow(QMainWindow):
                     i = self.textbox_map[i_row][i_col][1]
                     ans = self.cw.crossword[i_row][i_col]
                     usr_input = self.textbox[word_id][i].text()
-
+                    self.textbox[word_id][i].setStyleSheet("color:black; ")
                     if usr_input.upper() != ans.upper():
                         self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s; "
+                                                               "color:red; "
                                                                "background-color:rgba(255,225,225);" % self.tbEdgeColor)
-                        if usr_input:
-                            self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s;"
-                                                                   "color:red; "
-                                                                   "background-color: rgb(255,225,225);" % self.tbEdgeColor)
-                    else:
-                        self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s;"
-                                                               "background-color: rgb(255,255,255)" % self.tbEdgeColor)
+
+                    self.textbox[word_id][i].setText(self.cw.crossword[i_row][i_col])
+                    self.textbox[word_id][i].setEnabled(False)
+
 
     def showAnswer(self):
         '''
