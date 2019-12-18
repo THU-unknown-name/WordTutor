@@ -51,11 +51,11 @@ todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 
 一定要在退出背单词时完成保存，否则今日计划表的数据会丢失！
 
-#### testTodayList.py
+#### test_studyPlan.py
 
-测试用文件
+测试用文件,里面针对Vocab.py和TodayList.py的各个接口和功能进行了测试。通过调用WordTutor中的StudyPlanTest.py运行
 
-注：在Vocab.py和TodayList.py中也添加了测试代码
+运行方式：在WordTutor目录下 运行 python StudyPlanTest.py
 
 
 ## 背单词
