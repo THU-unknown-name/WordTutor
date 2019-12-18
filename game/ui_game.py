@@ -327,7 +327,7 @@ class gameWindow(QMainWindow):
         self.dispDef.setGeometry(QRect(int(self.def_loc[0] + shift_def_w), int(self.def_loc[1]), self.def_w - shift_def_w, self.def_h))
         self.dispDef.setWordWrap(True)
         self.dispDef.setAlignment(Qt.AlignVCenter)
-        self.dispDef.setFont(QFont("Simsun", 16))
+        self.dispDef.setFont(QFont("Simsun", 12))
         self.dispDef.setStyleSheet('''
                                     QLabel{border:none;color:white;font-weight:00;
                                         }

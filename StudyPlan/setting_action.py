@@ -23,7 +23,9 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.today_list_obj = TodayList.TodayList(self.vocab)
 
         if self.today_list_obj.new_user:
-            self.word_num_today = 50  # 默认值为50
+            value, ok = QInputDialog.getInt(self, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
+            self.today_list_obj.plan_for_new_user(value, self.vocab)
+            self.word_num_today = value  # 默认值为50
         else:
             self.word_num_today = self.today_list_obj.get_stated_todaylist_length()
 

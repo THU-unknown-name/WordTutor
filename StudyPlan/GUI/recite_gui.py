@@ -18,25 +18,69 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton_no = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_no.setGeometry(QtCore.QRect(510, 380, 161, 61))
+        self.pushButton_no.setGeometry(QtCore.QRect(510, 380, 161, 50))
         self.pushButton_no.setObjectName("pushButton_no")
         self.pushButton_yes = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_yes.setGeometry(QtCore.QRect(130, 380, 171, 71))
+        self.pushButton_yes.setGeometry(QtCore.QRect(130, 380, 171, 50))
+        self.pushButton_yes.setIcon(QtGui.QIcon('./exit.jpg'))
+        self.pushButton_no.setIcon(QtGui.QIcon('./exit.jpg'))
         self.pushButton_yes.setMouseTracking(False)
+        self.pushButton_yes.setStyleSheet('''
+                                  QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
+                                      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                              ''')
+        self.pushButton_no.setStyleSheet('''
+                                         QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
+                                             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                     ''')
         self.pushButton_yes.setObjectName("pushButton_yes")
+
+
         self.pushButton_revoke = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_revoke.setEnabled(True)
-        self.pushButton_revoke.setGeometry(QtCore.QRect(320, 380, 171, 71))
+        self.pushButton_revoke.setGeometry(QtCore.QRect(320, 380, 171, 30))
+        self.pushButton_revoke.setIcon(QtGui.QIcon('./exit.jpg'))
+        
         self.pushButton_revoke.setObjectName("pushButton_revoke")
         self.pushButton_next = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_next.setGeometry(QtCore.QRect(320, 470, 171, 71))
+        self.pushButton_next.setGeometry(QtCore.QRect(320, 470, 171, 30))
         self.pushButton_next.setObjectName("pushButton_next")
+        self.pushButton_next.setIcon(QtGui.QIcon('./exit.jpg'))
+
+        self.pushButton_revoke.setStyleSheet('''
+                                          QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
+                                              font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                      ''')
+        self.pushButton_next.setStyleSheet('''
+                                                 QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
+                                                     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                             ''')
+
         self.label_stop_showing = QtWidgets.QLabel(self.centralwidget)
-        self.label_stop_showing.setGeometry(QtCore.QRect(350, 350, 111, 21))
+        self.label_stop_showing.setGeometry(QtCore.QRect(320, 480, 171, 30))
+        self.exit_Button.setObjectName("exit_Button")
+        self.exit_Button.setStyleSheet('''
+                                    QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
+                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                ''')
+        self.exit_Button.setIcon(QtGui.QIcon('./exit.jpg'))
+        self.exit_Button.clicked.connect(self.close)
+
+        
+        self.label_stop_showing = QtWidgets.QLabel(self.centralwidget)
+        self.label_stop_showing.setGeometry(QtCore.QRect(330, 350, 200, 30))
         self.label_stop_showing.setObjectName("label_stop_showing")
+        self.label_stop_showing.setStyleSheet('''
+                                                  QLabel{border:none;color:white;font-size:20px;  font-weight:700;
+                                                      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                              ''')
         self.label_show_again = QtWidgets.QLabel(self.centralwidget)
-        self.label_show_again.setGeometry(QtCore.QRect(350, 350, 111, 16))
+        self.label_show_again.setGeometry(QtCore.QRect(330, 350, 200, 30))
         self.label_show_again.setObjectName("label_show_again")
+        self.label_show_again.setStyleSheet('''
+                                                          QLabel{border:none;color:white;font-size:20px;  font-weight:700;
+                                                              font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+                                                      ''')
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, 10, 121, 16))
         self.label.setObjectName("label")
@@ -123,7 +167,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_no.setText(_translate("MainWindow", "没记住"))
         self.pushButton_yes.setText(_translate("MainWindow", "记住了"))
-        self.pushButton_revoke.setText(_translate("MainWindow", "撤销"))
+        self.exit_Button.setText(_translate("MainWindow", "退   出"))
+        self.pushButton_revoke.setText(_translate("MainWindow", "撤   销"))
         self.pushButton_next.setText(_translate("MainWindow", "下一个"))
         self.label_stop_showing.setText(_translate("MainWindow", "今日不再安排学习"))
         self.label_show_again.setText(_translate("MainWindow", "今日继续安排学习"))
