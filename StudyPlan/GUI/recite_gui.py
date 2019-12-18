@@ -43,7 +43,7 @@ class Ui_MainWindow(object):
         
         self.pushButton_revoke.setObjectName("pushButton_revoke")
         self.pushButton_next = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_next.setGeometry(QtCore.QRect(320, 470, 171, 30))
+        self.pushButton_next.setGeometry(QtCore.QRect(320, 440, 171, 30))
         self.pushButton_next.setObjectName("pushButton_next")
         self.pushButton_next.setIcon(QtGui.QIcon('./exit.jpg'))
 
@@ -56,8 +56,8 @@ class Ui_MainWindow(object):
                                                      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                                              ''')
 
-        self.label_stop_showing = QtWidgets.QLabel(self.centralwidget)
-        self.label_stop_showing.setGeometry(QtCore.QRect(320, 480, 171, 30))
+        self.exit_Button = QtWidgets.QPushButton(self.centralwidget)
+        self.exit_Button.setGeometry(QtCore.QRect(320, 480, 171, 30))
         self.exit_Button.setObjectName("exit_Button")
         self.exit_Button.setStyleSheet('''
                                     QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
@@ -168,6 +168,7 @@ class Ui_MainWindow(object):
         self.pushButton_no.setText(_translate("MainWindow", "没记住"))
         self.pushButton_yes.setText(_translate("MainWindow", "记住了"))
         self.exit_Button.setText(_translate("MainWindow", "退   出"))
+
         self.pushButton_revoke.setText(_translate("MainWindow", "撤   销"))
         self.pushButton_next.setText(_translate("MainWindow", "下一个"))
         self.label_stop_showing.setText(_translate("MainWindow", "今日不再安排学习"))
