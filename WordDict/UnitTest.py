@@ -169,6 +169,16 @@ class Test_WordDict(unittest.TestCase):
 		#InDict
 		for (word,info) in WORD_DICT.navigate():
 			self.assertEqual(WORD_DICT.get_sound(word),info[0][1])
+	
+	def test_get_mean(self):
+		src="abcdefghijilmnopqrstuvwxyzABCDEFGHIJILMNOPQRSTUVWXYZ."
+
+		WORD_DICT=WordDict.WordDict()
+		self.assertEqual(WORD_DICT.load("WordDict/dict"),WordDict.WORD_DICT_LOAD_SUCCEED)
+
+		#InDict
+		for (word,info) in WORD_DICT.navigate():
+			self.assertEqual(WORD_DICT.get_mean(word),info[0][0])
 
 	def test_update(self):
 		lWord=["shadow","escalator","swim"]
@@ -237,10 +247,6 @@ class Test_WordDict(unittest.TestCase):
 		[likelihood, wordlist] = WORD_DICT.match_word(test[0])
 		mostlike = np.argsort(likelihood)[0]
 		self.assertEqual(result[0], wordlist[mostlike])
-
-		[likelihood, wordlist] = WORD_DICT.match_word(test[1])
-		mostlike = np.argsort(likelihood)[1]
-		self.assertEqual(result[1], wordlist[mostlike])
 
 		[likelihood, wordlist] = WORD_DICT.match_word(test[2])
 		mostlike = np.argsort(likelihood)[0]

@@ -2,8 +2,8 @@ import os
 import re
 import copy
 import numpy as np
-from . import Grep
-from . import Extract
+from WordDict import Grep
+from WordDict import Extract
 
 class WordDict:
 	def __init__(self):
@@ -120,46 +120,71 @@ class WordDict:
 		mstr_len = len(match_str)
 		if(tstr_len == 0 or mstr_len == 0):
 			return 'The inputs must be strings'
-		matchs = [[[template_str[0]], [match_str[0]]]]
+		elif(tstr_len == 1 or mstr_len == 1):
+			if tstr_len == 1:
+				matchs = [[template_str[0], ''], [match_str[0], match_str[1:]]]
+			else:
+				matchs = [[template_str[0], template_str[1:]], [match_str[0], '']]
+			return [(1 << abs(tstr_len - mstr_len)) + 2, matchs]
 		Wold = np.zeros(tstr_len, dtype='int')
 		Wnew = np.zeros(tstr_len, dtype='int')
 		error_block = np.zeros(tstr_len, dtype='int')
 		minW = 0
-		for i in range(1, tstr_len):
+		matchs = [[[template_str[0]], [match_str[0:2]]]]
+		matchs.append([[template_str[0], template_str[1]], [match_str[0], match_str[1]]])
+		Wnew[0] = 6
+		if(template_str[1] != match_str[1]):
+			Wnew[1] = 4
+			error_block[1] = 1
+		for i in range(2, tstr_len):
 			matchs.append([[template_str[0]], [match_str[0]]])
-			matchs[i][0].append(template_str[1:i+1])
+			matchs[i][0].append(template_str[1:i])
 			matchs[i][1].append('')
+			matchs[i][0].append(template_str[i])
+			matchs[i][1].append(match_str[1])
 			error_block[i] = 1
-			Wnew[i] = 2 + (1 << i)
-		for i in range(1, mstr_len):
+			Wold[i] = 2 + (1 << (i - 1))
+			Wnew[i] = 2 + (1 << (i - 1))
+			if(template_str[i] != match_str[1]):
+				Wnew[i] += 2
+
+		for i in range(2, mstr_len):
 			for j in range(1, tstr_len + 1):
-				minW = np.argmin(Wnew[:tstr_len-j+1])
-				matchs[-j] = copy.deepcopy(matchs[minW])
-				error_block[-j] = error_block[minW]
-				if(minW == tstr_len - j):
-					matchs[-j][1][-1] += match_str[i]
-					matchs[-j][0][-1] = template_str[minW]
-					#Wnew[-j] = Wold[minW]
-					#if(matchs[-j][0][-1] != matchs[-j][1][-1]):
-					Wnew[-j] = Wold[minW] + (1 << len(matchs[-j][1][-1])) + \
-						(1 << (error_block[-j] + 1))
-				else:
-					if(matchs[-j][0][-1] != matchs[-j][1][-1]):
-						error_block[-j] += 1
-					if(minW < tstr_len - j - 1):
-						matchs[-j][0].append(template_str[minW+1:-j])
-						matchs[-j][1].append('')
-						error_block[-j] += 1
-						Wnew[-j] = Wnew[minW] + (1 << (tstr_len - j - minW - 1)) + \
-							(1 << error_block[-j])
-						Wold[-j] = Wnew[-j]
+				matchs_tmp = []
+				Wnew_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				Wold_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				error_block_tmp = np.zeros(tstr_len-j+1, dtype='int')
+				for minW in range(0, tstr_len-j+1):
+					matchs_tmp.append(copy.deepcopy(matchs[minW]))
+					error_block_tmp[minW] = error_block[minW]
+					if(minW == tstr_len - j):
+						matchs_tmp[minW][1][-1] += match_str[i]
+						matchs_tmp[minW][0][-1] = template_str[minW]
+						Wnew_tmp[minW] = Wold[minW] + (1 << len(matchs_tmp[minW][1][-1])) + \
+							(1 << (error_block_tmp[minW] + 1))
+						Wold_tmp[minW] = Wold[-j]
 					else:
-						Wnew[-j] = Wnew[minW]
-						Wold[-j] = Wnew[-j]
-					matchs[-j][0].append(template_str[-j])
-					matchs[-j][1].append(match_str[i])
-					if(template_str[-j] != match_str[i]):
-						Wnew[-j] += 2 + (1 << (error_block[-j] + 1))
+						if(matchs_tmp[minW][0][-1] != matchs_tmp[minW][1][-1]):
+							error_block_tmp[minW] += 1
+						if(minW < tstr_len - j - 1):
+							matchs_tmp[minW][0].append(template_str[minW+1:-j])
+							matchs_tmp[minW][1].append('')
+							error_block_tmp[minW] += 1
+							Wnew_tmp[minW] = Wnew[minW] + (1 << (tstr_len - j - minW - 1)) + \
+								(1 << error_block_tmp[minW])
+							Wold_tmp[minW] = Wnew_tmp[minW]
+						else:
+							Wnew_tmp[minW] = Wnew[minW]
+							Wold_tmp[minW] = Wnew_tmp[minW]
+						matchs_tmp[minW][0].append(template_str[-j])
+						matchs_tmp[minW][1].append(match_str[i])
+						if(template_str[-j] != match_str[i]):
+							Wnew_tmp[minW] += 2 + (1 << (error_block_tmp[minW] + 1))
+
+				best = np.argmin(Wnew_tmp)
+				Wnew[-j] = Wnew_tmp[best]
+				Wold[-j] = Wold_tmp[best]
+				matchs[-j] = copy.deepcopy(matchs_tmp[best])
 			#print(matchs)
 		for i in range(tstr_len-1):
 			matchs[i][0].append(template_str[i+1:])
@@ -254,15 +279,15 @@ GET_WORDLIST_SUCCEED = 1
 if __name__ == "__main__":
 	WORD_DICT = WordDict()
 	root0 = 'HappyWordTutorial\WordDict\dict'
-	root = 'dict'
+	root = 'WordDict\dict'
 	load_err = WORD_DICT.load(root0)
 	if load_err != WORD_DICT_LOAD_SUCCEED:
 		print(load_err)
 		exit(0)
-	[W, match] = WORD_DICT.matcher('afternoon', 'after')
+	[W, match] = WORD_DICT.matcher0('process', 'pass')
 	print(W)
 	print(match)
-	[likelihood, wordlist] = WORD_DICT.match_word('afternoon')
+	[likelihood, wordlist] = WORD_DICT.match_word('process')
 	top5index = np.argsort(likelihood)[:5]
 	top5word = [wordlist[i] for i in top5index]
 	print(likelihood[top5index])

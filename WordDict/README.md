@@ -79,9 +79,10 @@
     for word, info in WORD_DICT.navigate():
         print(word) #打印单词
         print(info[0][0]) #打印释义
-        #(暂无)print(info[1]['例句']) #打印例句
-    ~~~
-
+        print(info[1]['hennkou']) #打印例句
+        print(info[1]['reiku']) #打印变形
+  ~~~
+    
     
 
 + match_word(self,word):匹配单词
@@ -137,14 +138,10 @@
     [W, match] = WORD_DICT.matcher('afternoon', 'apterno')
     print(W)
     print(match)
-    ######################################################
-    #打印结果如下
-    7.0
-    [['af', 't', 'e', 'r', 'noo', 'n'], ['ap', 't', 'e', 'r', 'n', 'o']]
     ~~~
-
     
-
+    
+  
 + get_info(self,word):获取单词的信息
 
   + input:
@@ -176,14 +173,16 @@
     info = WORD_DICT.get_info('afternoon')
     if info != WORD_NOT_FOUND:   
     	print(info[0][0]) #打印释义
-    	#(暂无)print(info[1]['例句']) #打印例句
+    	print(info[1]['hennkou']) #打印例句
     else:
         pass
     ~~~
 
     
 
-+ get_sound(self, word):获取发音文件路径
++ get_sound(self, word):获取发音
+
++ get_mean(self, word):获取释义
 
 + update(self):更新词库
 	+ input:
