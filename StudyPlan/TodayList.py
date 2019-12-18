@@ -4,6 +4,7 @@ import datetime
 
 from StudyPlan import Vocab
 from random import sample
+from WordDict import WordDict
 
 
 class TodayList:
@@ -15,7 +16,7 @@ class TodayList:
         返回值：无
         """
         self.__total_vocab_num = len(vocab.getVocabDict())
-        self.__today_list = []
+        self.__today_list = {}
         self.__date = datetime.date.today()
         self.new_user = False
         self.__record_path = 'StudyPlan/TodayList.pkl'
@@ -122,18 +123,20 @@ class TodayList:
         print(self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num)
 
         # 将三种熟悉程度词汇依次添加到todayList中
-        self.__today_list = sample(familiarVocabList, self.__familiarVocab_num)
-        self.__today_list.extend(sample(unfamiliarVocabList, self.__unfamiliarVocab_num))
-        self.__today_list.extend(sample(newVocabList, self.__newVocab_num))
-        pass
+        today_list = sample(familiarVocabList, self.__familiarVocab_num)
+        today_list.extend(sample(unfamiliarVocabList, self.__unfamiliarVocab_num))
+        today_list.extend(sample(newVocabList, self.__newVocab_num))
+        self.__today_list = {word: 0 for word in today_list}
+        # print(self.__today_list)
 
     def getTodayList(self):
         """
          函数名：getTodayList
          参数：无
          作用：返回todayList（每日计划表）
-         返回值：list（如['a', 'baby', 'cat'...]）
+         返回值：dict（如['a':0, 'baby':0, 'cat':0...]）
          """
+        print(self.__today_list)
         return self.__today_list
 
     # 设置每日计划表的长度（此设定从第二天开始实行）
@@ -168,36 +171,42 @@ class TodayList:
                 self.__today_list.remove(word)
 
     # 记录已完成的词个数
-    def record_finished(self, num):
+    def record_finished(self, num, today_list_dict):
         self.finished_num = num
+        self.__today_list = today_list_dict
 
     # 获取当前背到了哪个单词（一般在同一天多次打开程序时调用）
     def get_current_word(self):
         return self.__current_word_index
 
-    # 添加单词到每日计划中
-    # ***注意：此时并没有添加到词库中！***
-    def add_word_to_todaylist(self, word):
+    # 添加单词到每日计划中,同时该词会被添加到词库vocab中
+    def add_word_to_todaylist(self, word, vocab):
         """
          函数名：add_word_to_todaylist
          参数：添加的单词 word
-         作用：添加单词到每日计划中
-         返回值：无
+         作用：添加单词到每日计划中，同时被添加到词库中
+         返回值：False（添加失败，比如单词已经在今日列表中或者根本不是一个单词）or True（添加成功）
          """
-        if word not in self.__today_list:
-            self.__today_list.append(word)
+        if vocab.add_word_to_vocab(word) and (word not in self.__today_list.keys()):
+            self.__today_list[word] = 0
             self.__vocab_num += 1
             self.save_todaylist()
-        pass
+            return True
+        else:
+            return False
 
     def get_n_word_from_todaylist(self, n):
         """
         函数名：get_n_word_from_todaylist
         参数：单词个数 n
         作用：从每日计划中随机抽取n个单词，供游戏环节使用
-        返回值：list（如：['afternoon','cat',...]）
+        返回值：list（如：['afternoon','cat',...].如果n不满足要求则返回空列表）
         """
-        return sample(self.__today_list, n)  # sample()函数本身自带异常处理
+        word_list = list(self.today_list_dict.keys())
+        if 0 < n <= len(word_list):
+            return sample(word_list, n)
+        else:
+            return []
 
     # 将__today_list, __vocab_num, __stated_vocab_num, __date， __current_word_index等变量存到pickle文件中，运行时读取
     # ***注意：一定要在结束背单词的动作后执行该函数，保存数据！
@@ -217,7 +226,8 @@ class TodayList:
 #     if os.path.exists('TodayList.pkl'):
 #         os.remove('TodayList.pkl')
 #
-#     vocab = Vocab.Vocab()
+#     word_dict = WordDict.WordDict()
+#     vocab = Vocab.Vocab(word_dict)
 #     print("******Testing the initialization of TodayList******")
 #     todayList = TodayList(vocab)
 #     print(todayList.getTodayList(), '\n')
@@ -241,7 +251,7 @@ class TodayList:
 #     # 此处一般模仿的是同一天多次打开软件，若模仿不同天打开软件，可在__init__改变日期的定义方法,采用下面代码进行测试
 #     print("******Suppose we have recited some words******")
 #     print("Update current_word...\n")
-#     todayList.update_current_word(len(todayList.getTodayList())-3)
+#     todayList.update_current_word(len(todayList.getTodayList()) - 3)
 #     todayList.save_todaylist()
 #     print("......Restart the app......\n")
 #     todayList = TodayList(vocab)

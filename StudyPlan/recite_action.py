@@ -43,11 +43,12 @@ class ReciteWords:
         if self.today_list_obj.new_user:
             value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量：', 50, 5, 700, 1)
             self.today_list_obj.plan_for_new_user(value, self.vocab)
-        self.today_list = self.today_list_obj.getTodayList()
+        self.today_list_dict = self.today_list_obj.getTodayList()
+        self.today_list = list(self.today_list_dict.keys())
         self.finished = False
         self.ite = -1
         self.review_list = []
-        self.is_first_round = True
+        # self.is_first_round = True
         if self.next_word():
             print('开始背单词')
             if len(self.today_list) > 0:
@@ -68,16 +69,17 @@ class ReciteWords:
         else: (have finished today's task)
             return false
         """
-        while True:  # 找到下一个不是已完成的单词（TODO: 由于用户可能会间隔地记住某些词，记录人当前背到第几个单词是没用的，目前只能这么暂时处理）
+        while True:  # 找到下一个不是已完成的单词
+            # today_list_dict: 0 -- 没背过；1 -- 背过没记住；2 -- 已经背过了（或者没记住然后记住了）
             self.ite += 1
             if self.ite >= len(self.today_list):
                 self.today_list = self.review_list.copy()
                 self.review_list.clear()
                 self.ite = 0
-                self.is_first_round = False
+                # self.is_first_round = False
                 if len(self.today_list) < 1:
                     return False
-            if self.vocab.getFamiliarity(self.today_list[self.ite]) < 2:
+            if self.today_list_dict[self.today_list[self.ite]] < 2:
                 break
 
         self.word_current = self.today_list[self.ite]
@@ -97,17 +99,19 @@ class ReciteWords:
         familiar 不会 --> unfamiliar
         unfamiliar 不会 --> unfamiliar
         """
+        self.today_list_dict[self.word_current] = 1  # 背过但没记住
         self.vocab.updateFamiliarity(word=self.word_current, familiarity=1)
 
     def upgrade(self):
         # Only upgrade in first round
-        if self.is_first_round:
+        if self.today_list_dict[self.word_current] == 0:
             # new 会 --> familiar
             # familiar 会 --> familiar
             # unfamiliar 会 --> familiar
             self.vocab.updateFamiliarity(word=self.word_current, familiarity=2)
         else:
             pass
+        self.today_list_dict[self.word_current] = 2  # 记住了，今天不再背
 
 
 class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
@@ -218,9 +222,9 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
     def closeEvent(self, event):
         print("Close event activated.")
         self.reciting.vocab.saveVocab()
-        self.reciting.today_list_obj.record_finished(self.finished_words_num)  # 为了下次能够显示已经背的词数
+        self.reciting.today_list_obj.record_finished(self.finished_words_num,
+                                                     self.reciting.today_list_dict)  # 为了下次能够显示已经背的词数
         self.reciting.today_list_obj.save_todaylist()
-
 
 # if __name__ == "__main__":
 #     # GUI setup
