@@ -2,9 +2,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from game.gameSystem import *
-from game.getBestCrossword import *
-import numpy as np
-
 
 class myQLineEdit(QLineEdit):
     def __init__(self, parent, row, col):
@@ -129,7 +126,6 @@ class gameWindow(QMainWindow):
         new_cw_len_1 = self.init_cw_len
         if self.def_loc[0] + shift_def_w < rSideCw:
             max_cw_w = self.def_loc[0] - 2 * self.gap - lSideCw
-
             new_cw_len_1 = max_cw_w/(self.cw.nCol * self.init_cw_len) * self.init_cw_len
 
         # 如果填词游戏和按键重叠
@@ -172,7 +168,7 @@ class gameWindow(QMainWindow):
                         i_col += 1
                     continue
                 self.textbox[word_id].append(myQLineEdit(self, i_row, i_col))
-                self.textbox[word_id][i].move(int(self.cw_loc[0] + i_col * self.cw_len), int(self.cw_loc[1] + i_row * self.cw_len))
+                self.textbox[word_id][i].move(self.cw_loc[0] + i_col * self.cw_len, self.cw_loc[1] + i_row * self.cw_len)
                 self.textbox[word_id][i].resize(self.cw_len - 1, self.cw_len - 1)
                 self.textbox[word_id][i].setAlignment(Qt.AlignCenter)
                 self.textbox[word_id][i].setFont(QFont("Arial", 16))
@@ -201,6 +197,7 @@ class gameWindow(QMainWindow):
         '''
         self.clearAll()
         cw = createGameFromStudy(self.WORD_DICT, self.errorWin)
+        # cw = createGameFromAllWord()
         self.cw = cw
         self.close()
         self.initUI(cw, self.WORD_DICT, self.errorWin)
