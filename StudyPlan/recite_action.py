@@ -41,7 +41,7 @@ class ReciteWords:
         self.vocab.saveVocab()  # 保存词库
         self.today_list_obj = TodayList.TodayList(self.vocab)
         if self.today_list_obj.new_user:
-            value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量：', 50, 5, 700, 1)
+            value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
             self.today_list_obj.plan_for_new_user(value, self.vocab)
         self.today_list_dict = self.today_list_obj.getTodayList()
         self.today_list = list(self.today_list_dict.keys())
