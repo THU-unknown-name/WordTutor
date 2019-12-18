@@ -30,7 +30,7 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.textBrowser.setText(str(self.word_num_today))  # 显示今日词数
         self.textBrowser.setAutoFillBackground(True)
         self.listWidget.setAutoFillBackground(True)
-        self.listWidget_2.setAutoFillBackground(True)
+        # self.listWidget_2.setAutoFillBackground(True)
 
         self.vocab_dict = self.vocab.getVocabDict()
         _translate = QCoreApplication.translate
@@ -40,27 +40,31 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
             if self.vocab_dict[word] == 0:
                 continue
             print(word)
-            self.listWidget.addItem(word)
+            # self.listWidget.addItem(word)
             if self.vocab_dict[word] == 1:
+                self.listWidget.addItem(word + '    未掌握')
                 item = self.listWidget.item(ite)
                 # item.setText(_translate("MainWindow", str(word)))
                 item.setBackground(QtGui.QColor(0, 255, 0, 40))
                 item.setSizeHint(QSize(350, 30))
-                self.listWidget_2.addItem('未掌握')
-                item = self.listWidget_2.item(ite)
-                # item.setText(_translate("MainWindow", '未掌握'))
-                item.setBackground(QtGui.QColor(0, 255, 0, 40))
-                item.setSizeHint(QSize(350, 30))
+                item.setTextAlignment(Qt.AlignCenter)
+                # self.listWidget_2.addItem('未掌握')
+                # item = self.listWidget_2.item(ite)
+                # # item.setText(_translate("MainWindow", '未掌握'))
+                # item.setBackground(QtGui.QColor(0, 255, 0, 40))
+                # item.setSizeHint(QSize(350, 30))
             else:
+                self.listWidget.addItem(word + '    已掌握')
                 item = self.listWidget.item(ite)
                 # item.setText(_translate("MainWindow", str(word)))
                 item.setBackground(QtGui.QColor(0, 255, 0, 127))
                 item.setSizeHint(QSize(350, 30))
-                self.listWidget_2.addItem('已掌握')
-                item = self.listWidget_2.item(ite)
-                # item.setText(_translate("MainWindow", '未掌握'))
-                item.setBackground(QtGui.QColor(0, 255, 0, 127))
-                item.setSizeHint(QSize(350, 30))
+                item.setTextAlignment(Qt.AlignCenter)
+                # self.listWidget_2.addItem('已掌握')
+                # item = self.listWidget_2.item(ite)
+                # # item.setText(_translate("MainWindow", '未掌握'))
+                # item.setBackground(QtGui.QColor(0, 255, 0, 127))
+                # item.setSizeHint(QSize(350, 30))
             ite += 1
 
     # 设置
