@@ -44,7 +44,7 @@ class look_up(QtWidgets.QMainWindow):
         self.suggestion_label.setGeometry(QtCore.QRect(100, 100, 100, 30))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(18)
+        font.setPointSize(14)
         self.suggestion_label.setFont(font)
         self.suggestion_label.setObjectName("suggestion_label")
         self.suggestion_label.setStyleSheet('''
@@ -156,13 +156,13 @@ class look_up(QtWidgets.QMainWindow):
 
             if search_result==-1:
                 xiu_result = "没有查询到相应的单词\n"
-            # max_recorder = 0
-            # max_word ="happy"
-            # for word,haha in self.WORD_DICT.navigate():
-            #     common_len = longestCommonSequence(word,word_to_search)
-            #     if common_len>max_recorder:
-            #         max_word = word
-            #         max_recorder = common_len
+                # max_recorder = 0
+                # max_word ="happy"
+                # for word,haha in self.WORD_DICT.navigate():
+                #     common_len = longestCommonSequence(word,word_to_search)
+                #     if common_len>max_recorder:
+                #         max_word = word
+                #         max_recorder = common_len
                 [likelihood, wordlist] = self.WORD_DICT.match_word(word_to_search)
                 top5index = np.argsort(likelihood)[:5]
                 top5word = [wordlist[i] for i in top5index]
@@ -175,8 +175,8 @@ class look_up(QtWidgets.QMainWindow):
                 #print(search_result)
                 xiu_result = search_result[0][1]+"\n"+search_result[0][0]+"\n"+search_result[1]['hennkou']+"\n"+link(search_result[1]['reiku'])
 
-                #返回结果为search_result
-                self.browser.setText(xiu_result)
+            #返回结果为search_result
+            self.browser.setText(xiu_result)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
