@@ -113,7 +113,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def game_window(self):
         cw = createGameFromStudy(self.WORD_DICT, self.errorWin)
         self.ui_game = gameWindow()
-        self.ui_game.initUI(cw)
+        self.ui_game.initUI(cw, self.WORD_DICT, self.errorWin)
         self.ui_game.setStyleSheet("#MainWindow{border-image:url(bak1.jpg)}")
         # self.ui_game.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏边框
         self.ui_game.show()
