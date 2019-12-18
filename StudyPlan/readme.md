@@ -75,6 +75,19 @@ todayList为一个list，为每日计划表，如：['a', 'baby', 'cat', ...]
 * **recite_gui.\***：recite_gui.ui由Qt Designer设计，运行`pyuic5 -o recite_gui.py recite_gui.ui`后生成recite_gui.py
 * **congrats.\***：congrats.qrc为资源文件，congrats.py定义了资源模块，用于描述图片congrats.jpg，显示于背完所有今日词汇后的祝贺界面
 
+## 生词本管理
+
+由GUI/setting_gui.py及setting_action.py实现。
+
+### 学习计划设置
+
+* 显示当前计划：x个每天
+* 修改当前计划：点击"修改"按钮即可修改，弹出对话框，调用`Todaylist.set_stated_todaylist_length`会同步存入pkl中，第二日生效。输入数据不合法时会有警告。
+
+### 生词展示
+
+* 生词依次被展示在QListWidget中，包括已掌握（熟悉度=2）和未掌握（熟悉度=1）的。已掌握的词背景为深绿色，未掌握为浅绿色。
+
 ## Chang Log
 
 * 2019.12.6 增加了“今天”的概念，同一天的计划表不发生变化，不同天的计划表不同。因此还需要一个TodayList.pickle文件来存储相关信息

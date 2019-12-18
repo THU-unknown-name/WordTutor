@@ -75,6 +75,7 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.textBrowser.setText(str(self.word_num_today))  # 更新今日词数
         try:
             self.today_list_obj.set_stated_todaylist_length(value)
+            self.today_list_obj.save_todaylist()
         except ValueError:
             QMessageBox.warning(self, '提醒', '设定计划表长度必须为小于等于词库总词数的正整数', QMessageBox.Yes)
 
