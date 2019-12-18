@@ -1,20 +1,26 @@
 # WordTutor
-Project for Software Engineering, THU 2019 Fall
+Project for Software Engineering, THU 2019 Fall  
 
-Generate a crossword game from an example word list.
+当前进度：从已经背过且记住的单词中抽取，生成填词游戏并显示；可点击“下一轮”开启新的游戏    
+待完成：  
+- [ ] 打分与积分系统？  
+- [x] 词库接口（改为与生词本对接）  
+- [x] 完善UI  
+    - [x] 填词游戏和中文释义可能会重叠  
+    - [x] 按键：检查答案，错误显示红色  
+    - [x] 按键：下一轮游戏  
+    - [x] 光标debug  
+- [x] 完备的填词游戏算法  
+- [x] 数据库接口  
+- [x] 每个词筛选部分释义显示  
+- [x] UI背景，统一窗口大小  
 
-当前进度：从全部词库中抽取单词，生成填词游戏并显示，增加了一些优化
-待完成：
-- [ ] 测评系统（检查是否正确、打分系统、进行下一轮游戏等）
-- [ ] 词库接口（改为与生词本对接）
-- [ ] 完善UI  
-    - [ ] 填词游戏和中文释义可能会重叠  
-    - [ ] 按键（检查答案、下一轮等）  
-    - [ ] 光标debug  
-- [x] 完备的填词游戏算法
-- [x] 数据库接口
-- [x] 每个词筛选部分释义显示
-- [x] UI背景，统一窗口大小
+### gameSystem.py - added on Dec 18, 2019  
+计划待完成：添加积分机制，显示答案需要消耗积分，正确完成游戏可以获得积分  
+原getWordList.py合并到这里  
+- getWordList(num): 从全部词库中抽取单词  
+- createGameFromAllWord(): 生成优化的填词游戏（从全部词库中抽取）  
+- createGameFromStudy(WORD_DICT, errorWin): **供程序主函数使用**，生成优化的填词游戏（从生词本中抽取）  
 
 ### getBestCrossword.py
 获取较优填词游戏结果  
@@ -23,6 +29,12 @@ Generate a crossword game from an example word list.
 测试效率：  
 - 9个单词，生成全部放置的填词游戏，执行100次花费0.2秒  
 - 10个单词，其中一个单词不可能放置，执行100次花费1.4秒（可调整要求来减少时间）  
+
+### ui_game.py
+包括gameWindow类（原为MainWindow），读取填字游戏生成游戏UI界面
+- 增加了显示答案和隐藏答案按键
+- 增加了检查答案按键
+- 增加了方向键控制光标
 
 ### Crossword.py
 包括MyCrossword类，用于存储、生成、读取填字游戏
@@ -58,14 +70,6 @@ self.listCross:
 self.listDown:  
 [1, '线索', 'cue']  
 [2, '校园', 'campus']
-
-### ui_game.py
-包括gameWindow类（原为MainWindow），读取填字游戏生成游戏UI界面
-- 增加了显示答案和隐藏答案按键
-- 增加了方向键控制光标
-
-### getWordList.py
-目前从全部词库中随机选取单词，待改为生词本的接口
 
 ### main.py
 主程序

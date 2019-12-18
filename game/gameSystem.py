@@ -1,4 +1,4 @@
-from getBestCrossword import *
+from game.getBestCrossword import *
 from StudyPlan.Vocab import Vocab
 from random import sample
 from WordDict.WordDict import *
@@ -37,7 +37,6 @@ def createGameFromStudy(WORD_DICT, errorWin):
     vocab = Vocab(WORD_DICT)
     word_list_for_game = vocab.get_n_word_from_familiarVocab(MAX_WORD_NUM)
     wordList = {}
-    print('word_list_for_game: ', word_list_for_game)
 
     for word in word_list_for_game:
         word_mean = WORD_DICT.get_mean(word)
@@ -47,8 +46,6 @@ def createGameFromStudy(WORD_DICT, errorWin):
         wordList[word] = [[word_mean], {}]
 
     okay = False
-    print('wordList:', wordList)
-
     while not okay:
         cw = getBestCrossword(wordList)  # 根据要求生成较优的填词游戏
         if cw.placed.__len__() >= MIN_WORD_NUM:
