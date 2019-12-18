@@ -3,8 +3,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from game.gameSystem import *
-from game.getBestCrossword import *
+from gameSystem import *
+from getBestCrossword import *
 import numpy as np
 
 
@@ -69,36 +69,22 @@ class gameWindow(QMainWindow):
         self.showAns = QPushButton('显示答案', self)
         self.showAns.setGeometry(QRect(150, self.btn_top, 100, 41))
         self.showAns.clicked.connect(self.showAnswer)
-        self.showAns.setStyleSheet('''
-                                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                                        ''')
+
         self.hideAns = QPushButton('隐藏答案', self)
         self.hideAns.setGeometry(QRect(150, self.btn_top, 100, 41))
         self.hideAns.clicked.connect(self.hideAnswer)
         self.hideAns.setVisible(False)
-        self.hideAns.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                    ''')
 
         self.checkAns = QPushButton('检查答案', self)
         self.checkAns.setGeometry(QRect(270, self.btn_top, 100, 41))
         self.checkAns.clicked.connect(self.checkAnswer)
-        self.checkAns.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                        ''')
 
         self.exit = QPushButton('退出', self)
         self.exit.setGeometry(QRect(390, self.btn_top, 100, 41))
         self.exit.clicked.connect(self.close)
-        self.exit.setStyleSheet('''
-                            QPushButton{border:none;color:white;font-size:25px;font-weight:700;
-                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-                        ''')
+
         # self.nextGame = QPushButton('下一轮', self)
-        # self.nextGame.setGeometry(QRect(510, 500, 100, 41))
+        # self.nextGame.setGeometry(QRect(510, self.btn_top, 100, 41))
         # self.nextGame.clicked.connect(self.getNextGame)
 
     def checkOverlap(self):
@@ -206,14 +192,17 @@ class gameWindow(QMainWindow):
         self.cw = cw
         self.show()
         self.showCrossword()
-        self.addLabel()
-        # QApplication.processEvents()
+        QApplication.processEvents()
 
     def clearAll(self):
+        self.showAns.deleteLater()
+        self.hideAns.deleteLater()
+        self.checkAns.deleteLater()
+        self.nextGame.deleteLater()
         self.dispDef.deleteLater()
         self.label.deleteLater()
-        self.dispDef = QLabel(self)
-        self.label = QLabel(self)
+        self.showCrossword()
+
         for item in self.textbox:
             for textbox in item:
                 textbox.deleteLater()
@@ -243,10 +232,10 @@ class gameWindow(QMainWindow):
                         if usr_input:
                             self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s;"
                                                                    "color:red; "
-                                                                   "background-color: rgb(255,225,225);" % self.tbEdgeColor)
+                                                                   "background-color: rgb(255,225,225);"% self.tbEdgeColor)
                     else:
                         self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s;"
-                                                               "background-color: rgb(255,255,255)" % self.tbEdgeColor)
+                                                               "background-color: rgb(255,255,255)"% self.tbEdgeColor)
 
     def showAnswer(self):
         '''
@@ -325,10 +314,6 @@ class gameWindow(QMainWindow):
         self.dispDef.setWordWrap(True)
         self.dispDef.setAlignment(Qt.AlignTop)
         self.dispDef.setFont(QFont("Simsun", 16))
-        self.dispDef.setStyleSheet('''
-                                    QLabel{border:none;color:white;font-weight:00;
-                                        }
-                                ''')
 
     def keyPressEvent(self, a0):
         if a0.key() == Qt.Key_Up:

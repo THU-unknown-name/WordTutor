@@ -1,5 +1,5 @@
 import time
-from game.Crossword import *
+from Crossword import *
 
 # 获取最佳填词游戏（可增加更多优化方法）
 """
