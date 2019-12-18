@@ -20,7 +20,7 @@ class TodayList:
         self.__date = datetime.date.today()
         self.new_user = False
         self.__record_path = 'StudyPlan/TodayList.pkl'
-        print("Today:", self.__date)
+        # print("Today:", self.__date)
 
         # 模仿不同日期的代码（测试用）
         # self.__date = datetime.datetime.now()
@@ -28,21 +28,21 @@ class TodayList:
 
         # 从pickle文件中读取当前存储的todaylist
         if os.path.exists(self.__record_path):
-            print("Existing TodayList......\n")
+            # print("Existing TodayList......\n")
             pkl_file = open(self.__record_path, 'rb')
             todaylist_data = pickle.load(pkl_file)
             pkl_file.close()
             if self.__date == todaylist_data[3]:  # 如果当前打开程序和上次打开程序时同一天
-                print("This run and last run are on the same day......")
+                # print("This run and last run are on the same day......")
                 self.__vocab_num = todaylist_data[1]  # 读取出今天已有的计划表的各项数据
                 self.__stated_vocab_num = todaylist_data[2]
                 self.__today_list = todaylist_data[0]
                 self.__current_word_index = todaylist_data[4]  # 记录上次背到哪一个单词
                 self.finished_num = todaylist_data[5]  # 记录上次背了几个词
-                print('Have finished', self.finished_num)
+                # print('Have finished', self.finished_num)
 
             else:  # 如果是新的一天第一次打开程序
-                print("This run and last run are on the different day......")
+                # print("This run and last run are on the different day......")
                 self.__vocab_num = todaylist_data[2]  # 读取前一天设定的每日计划表单词数量
                 self.__stated_vocab_num = todaylist_data[2]  # 暂时不改变设定值
                 self.__generate_today_list(vocab)  # 生成新的计划表
@@ -51,7 +51,7 @@ class TodayList:
 
         # 如果还不存在pickle文件（即第一次使用程序），新建TodayList完成初始化
         else:
-            print("Not existing TodayList......\n")
+            # print("Not existing TodayList......\n")
             self.new_user = True
             # input_num = eval(input("输入每天需要背诵的单词数:"))
             # if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
@@ -63,13 +63,14 @@ class TodayList:
 
     # 为新用户生成今日计划
     def plan_for_new_user(self, input_num, vocab):
-        if not (0 <= self.__total_vocab_num and isinstance(input_num, int)):
-            raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+        if not (0 < input_num <= self.__total_vocab_num and isinstance(input_num, int)):  # 保证输入数据有效
+            return 0
         self.__vocab_num = input_num
         self.__stated_vocab_num = input_num
         self.__generate_today_list(vocab)
         self.__current_word_index = 0
         self.finished_num = 0
+        return input_num
 
     # 由词库生成每日计划
     def __generate_today_list(self, vocab):
@@ -119,15 +120,15 @@ class TodayList:
                 self.__unfamiliarVocab_num = len(unfamiliarVocabList)
                 self.__familiarVocab_num = self.__vocab_num - self.__unfamiliarVocab_num - self.__newVocab_num
 
-        # 测试用，打印每种词汇数量
-        print(self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num)
-
         # 将三种熟悉程度词汇依次添加到todayList中
         today_list = sample(familiarVocabList, self.__familiarVocab_num)
         today_list.extend(sample(unfamiliarVocabList, self.__unfamiliarVocab_num))
         today_list.extend(sample(newVocabList, self.__newVocab_num))
         self.__today_list = {word: 0 for word in today_list}
         # print(self.__today_list)
+
+        # 测试用，返回每种词汇数量
+        # return [self.__familiarVocab_num, self.__unfamiliarVocab_num, self.__newVocab_num]
 
     def getTodayList(self):
         """
@@ -136,7 +137,7 @@ class TodayList:
          作用：返回todayList（每日计划表）
          返回值：dict（如['a':0, 'baby':0, 'cat':0...]）
          """
-        print(self.__today_list)
+        # print(self.__today_list)
         return self.__today_list
 
     # 设置每日计划表的长度（此设定从第二天开始实行）
@@ -148,9 +149,9 @@ class TodayList:
          返回值：无
          """
         if not (0 < length <= self.__total_vocab_num and isinstance(length, int)):
-            raise ValueError("设定计划表长度必须为小于等于词库总词数的正整数")  # 保证输入数据有效
+            return 0
         self.__stated_vocab_num = length
-        pass
+        return self.__stated_vocab_num
 
     # 读取设定的每日计划表长度
     def get_stated_todaylist_length(self):
@@ -202,8 +203,8 @@ class TodayList:
         作用：从每日计划中随机抽取n个单词，供游戏环节使用
         返回值：list（如：['afternoon','cat',...].如果n不满足要求则返回空列表）
         """
-        word_list = list(self.today_list_dict.keys())
-        if 0 < n <= len(word_list):
+        word_list = list(self.__today_list.keys())
+        if (0 < n <= len(word_list)) and isinstance(n, int):
             return sample(word_list, n)
         else:
             return []
@@ -215,11 +216,14 @@ class TodayList:
         # Pickle dictionary using protocol 0.
         todaylist_data = [self.__today_list, self.__vocab_num, self.__stated_vocab_num, self.__date,
                           self.__current_word_index, self.finished_num]
-        print('Have finished', self.finished_num)
+        # print('Have finished', self.finished_num)
         pickle.dump(todaylist_data, output)
         output.close()
         pass
 
+    # 更改日期（测试时使用）
+    def change_date(self, time):
+        self.__date = time
 
 # 测试是否能够成功生成todayList
 # if __name__ == "__main__":
