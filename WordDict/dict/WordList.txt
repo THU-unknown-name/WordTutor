@@ -865,8 +865,6 @@ match
 material
 mathematics
 matter
-May
-may
 maybe
 me
 meal
@@ -917,9 +915,6 @@ mouse
 mouth
 move
 movie
-Mr.
-Mrs.
-Ms.
 much
 mum
 murder
@@ -1011,7 +1006,6 @@ over
 overcoat
 own
 owner
-P.E.
 Pacific
 package
 page
