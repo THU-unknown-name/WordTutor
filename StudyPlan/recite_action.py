@@ -134,7 +134,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(5).setHidden(True)
         self.label_2.setVisible(False)
         self.label_3.setVisible(False)
-        self.pushButton_exit.setVisible(False)
+        #self.pushButton_exit.setVisible(False)
 
         self.complete_all.connect(self.label_2.show)
         self.complete_all.connect(self.label_3.show)
@@ -145,7 +145,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.complete_all.connect(self.pushButton_revoke.hide)
         self.complete_all.connect(self.label_show_again.hide)
         self.complete_all.connect(self.label_stop_showing.hide)
-        self.complete_all.connect(self.pushButton_exit.show)
+        #self.complete_all.connect(self.pushButton_exit.show)
 
         self.reciting = ReciteWords(self.WORD_DICT, self)
         self.finished = False

@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
                                              ''')
 
         self.exit_Button = QtWidgets.QPushButton(self.centralwidget)
-        self.exit_Button.setGeometry(QtCore.QRect(320, 480, 171, 30))
+        self.exit_Button.setGeometry(QtCore.QRect(320, 500, 171, 30))
         self.exit_Button.setObjectName("exit_Button")
         self.exit_Button.setStyleSheet('''
                                     QPushButton{border:none;color:white;font-size:25px;  font-weight:700;
@@ -131,14 +131,14 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(200, 450, 421, 51))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(15)
         self.label_3.setFont(font)
         self.label_3.setScaledContents(False)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
-        self.pushButton_exit = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_exit.setGeometry(QtCore.QRect(320, 490, 171, 71))
-        self.pushButton_exit.setObjectName("pushButton_exit")
+        #self.pushButton_exit = QtWidgets.QPushButton(self.centralwidget)
+        #self.pushButton_exit.setGeometry(QtCore.QRect(320, 490, 171, 71))
+        #self.pushButton_exit.setObjectName("pushButton_exit")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -166,7 +166,7 @@ class Ui_MainWindow(object):
         self.pushButton_next.clicked.connect(self.pushButton_revoke.hide)
         self.pushButton_next.clicked.connect(self.label_show_again.hide)
         self.pushButton_next.clicked.connect(self.label_stop_showing.hide)
-        self.pushButton_exit.clicked.connect(MainWindow.close)
+        #self.pushButton_exit.clicked.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def mywordsound(self, item):          #发音
@@ -203,4 +203,4 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "sent1"))
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.label_3.setText(_translate("MainWindow", "恭喜！您已完成今日学习任务！"))
-        self.pushButton_exit.setText(_translate("MainWindow", "退出"))
+        #self.pushButton_exit.setText(_translate("MainWindow", "退出"))

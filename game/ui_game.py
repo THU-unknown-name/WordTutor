@@ -68,12 +68,13 @@ class gameWindow(QMainWindow):
         添加按键
         '''
         self.checkAns = QPushButton('检查答案', self)
-        self.checkAns.setGeometry(QRect(270, self.btn_top, 100, 41))
+        self.checkAns.setGeometry(QRect(220, self.btn_top, 150, 41))
         self.checkAns.clicked.connect(self.checkAnswer)
         self.checkAns.setStyleSheet('''
                                             QPushButton{border:none;color:white;font-size:25px;font-weight:700;
                                             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                                             ''')
+        self.checkAns.setIcon(QIcon('./exit.jpg'))
         self.nextGame = QPushButton('下一轮', self)
         self.nextGame.setGeometry(QRect(390, self.btn_top, 100, 41))
         self.nextGame.clicked.connect(self.getNextGame)
@@ -81,6 +82,7 @@ class gameWindow(QMainWindow):
                                             QPushButton{border:none;color:white;font-size:25px;font-weight:700;
                                             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                                             ''')
+        self.nextGame.setIcon(QIcon('./exit.jpg'))
         self.exit = QPushButton('退出', self)
         self.exit.setGeometry(QRect(510, self.btn_top, 100, 41))
         self.exit.clicked.connect(self.close)
@@ -88,6 +90,8 @@ class gameWindow(QMainWindow):
                                             QPushButton{border:none;color:white;font-size:25px;font-weight:700;
                                             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                                             ''')
+        self.exit.setIcon(QIcon('./exit.jpg'))
+        
         if self.testMode:
             self.showAns = QPushButton('显示答案', self)
             self.showAns.setGeometry(QRect(150, self.btn_top, 100, 41))
