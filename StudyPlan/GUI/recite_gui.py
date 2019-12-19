@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
+import win32com.client
 from PyQt5 import QtCore, QtGui, QtWidgets
 from . import congrats
 
@@ -108,6 +108,13 @@ class Ui_MainWindow(object):
         item = QtWidgets.QListWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.listWidget.addItem(item)
+        item = QtWidgets.QListWidgetItem()
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.listWidget.addItem(item)
+        item = QtWidgets.QListWidgetItem()
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.listWidget.addItem(item)
+        self.listWidget.itemClicked.connect(self.mywordsound)
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setGeometry(QtCore.QRect(80, 10, 721, 23))
         self.progressBar.setProperty("value", 24)
@@ -161,6 +168,15 @@ class Ui_MainWindow(object):
         self.pushButton_next.clicked.connect(self.label_stop_showing.hide)
         self.pushButton_exit.clicked.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def mywordsound(self, item):          #发音
+        spk = win32com.client.Dispatch("SAPI.SpVoice")
+        word_to_pronounce = item.text()
+        str = word_to_pronounce.split('\n')
+        if(len(str) > 1):
+            spk.Speak(str[0])
+        elif(str[0].isalpha()):
+            spk.Speak(str[0])
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

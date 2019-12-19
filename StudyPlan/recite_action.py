@@ -130,6 +130,8 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(1).setHidden(True)
         self.listWidget.item(2).setHidden(True)
         self.listWidget.item(3).setHidden(True)
+        self.listWidget.item(4).setHidden(True)
+        self.listWidget.item(5).setHidden(True)
         self.label_2.setVisible(False)
         self.label_3.setVisible(False)
         self.pushButton_exit.setVisible(False)
@@ -170,6 +172,8 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(1).setHidden(not visible)
         self.listWidget.item(2).setHidden(not visible)
         self.listWidget.item(3).setHidden(not visible)
+        self.listWidget.item(4).setHidden(not visible)
+        self.listWidget.item(5).setHidden(not visible)
 
     def show_exp(self):
         # slot
@@ -216,8 +220,18 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         item.setText(_translate("MainWindow", info[0][0]).replace('\n', ' '))  # TODO: merge into a single line
         item = self.listWidget.item(2)
         item.setText(_translate("MainWindow", info[0][1]).replace('\n', ' '))
-        item = self.listWidget.item(3)
-        item.setText(_translate("MainWindow", "".join(info[1]).replace('\n', ' ')))
+        exp = info[1]['reiku']
+        str = []
+        for i in range(len(exp)):
+            s_en = exp[i][0].split('\n')
+            s_en = s_en[2:]
+            s_ch = exp[i][1].split('\n')
+            s_ch = s_ch[1:]
+            if (len(s_ch) > 0) and (len(s_en) > 0):
+                str.append("{}\n{}".format(s_en[0], s_ch[0]))
+        for i in range(min(len(str), 3)):
+            item = self.listWidget.item(3 + i)
+            item.setText(_translate("MainWindow", str[i]))
 
     def closeEvent(self, event):
         print("Close event activated.")
