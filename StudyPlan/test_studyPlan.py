@@ -128,7 +128,7 @@ class Test_StudyPlan(unittest.TestCase):
         self.assertTrue(vocab.remove_word_from_vocab('electromechanical'))
         self.assertFalse('electromechanical' in vocab.getVocabDict().keys())
 
-        self.assertFalse(vocab.remove_word_from_vocab('asdffg'))
+        self.assertFalse(vocab.remove_word_from_vocab('asfg'))
         self.assertTrue(vocab.remove_word_from_vocab('afternoon'))
         self.assertFalse('afternoon' in vocab.getVocabDict().keys())
 
