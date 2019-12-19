@@ -1,9 +1,9 @@
 # WordTutor
 Project for Software Engineering, THU 2019 Fall  
 
-当前进度：从已经背过且记住的单词中抽取，生成填词游戏并显示；可点击“下一轮”开启新的游戏    
+从已经背过且记住的单词中抽取，生成填词游戏并显示；可点击“下一轮”开启新的游戏    
+
 待完成：  
-- [ ] 打分与积分系统？  
 - [x] 词库接口（改为与生词本对接）  
 - [x] 完善UI  
     - [x] 填词游戏和中文释义可能会重叠  
@@ -16,25 +16,17 @@ Project for Software Engineering, THU 2019 Fall
 - [x] UI背景，统一窗口大小  
 
 ### gameSystem.py - added on Dec 18, 2019  
-计划待完成：添加积分机制，显示答案需要消耗积分，正确完成游戏可以获得积分  
 原getWordList.py合并到这里  
-- getWordList(num): 从全部词库中抽取单词  
-- createGameFromAllWord(): 生成优化的填词游戏（从全部词库中抽取）  
-- createGameFromStudy(WORD_DICT, errorWin): **供程序主函数使用**，生成优化的填词游戏（从生词本中抽取）  
-
-### getBestCrossword.py
-获取较优填词游戏结果  
-当前筛选机制为黑名单+时间限制，如果全部单词都成功放置，或剩余单词均在黑名单中，则视为最佳结果输出；如果运行达到时间限制，直接输出  
-可增加的优化机制：棋盘格大小，越小越好；棋盘格长宽比，1:1最好  
-测试效率：  
-- 9个单词，生成全部放置的填词游戏，执行100次花费0.2秒  
-- 10个单词，其中一个单词不可能放置，执行100次花费1.4秒（可调整要求来减少时间）  
+- getWordListFromAll(num): 从全部词库中抽取单词，返回单词列表  
+- getWordListFromAllWithInfo(num): 从全部词库中抽取单词，返回单词列表及其中文释义
+- getWordListFromStudy(self, WORD_DICT, errorWin): 从生词本中抽取单词，返回单词列表及其中文释义  
+- getBestCrossword(self, wordList): 对特定的单词列表，生成最优填词游戏，返回MyCrossword类
+- createGameFromAllWord(): 生成优化的填词游戏，保证总单词数不少于5个（从全部词库中抽取）  
+- createGameFromStudy(WORD_DICT, errorWin): **供程序主函数使用**，生成优化的填词游戏，保证总单词数不少于5个（从生词本中抽取）  
 
 ### ui_game.py
-包括gameWindow类（原为MainWindow），读取填字游戏生成游戏UI界面
-- 增加了显示答案和隐藏答案按键
-- 增加了检查答案按键
-- 增加了方向键控制光标
+包括gameWindow类，读取填词游戏，显示游戏及交互UI界面  
+- 包括“检查答案”、“下一轮”、“退出”按键
 
 ### Crossword.py
 包括MyCrossword类，用于存储、生成、读取填字游戏
@@ -61,7 +53,7 @@ Project for Software Engineering, THU 2019 Fall
 例如：  
 {'cue': [['线索'], {'len': 3}, {'dir': 1, 'startPos': [0, 1], 'order': 1, 'id': 0}],    
 'campus': [['校园'], {'len': 6}, {'dir': 1, 'startPos': [0, 3], 'order': 2 'id': 1}],  
-'permission': [['允许'], {'len': 10}, {'dir': 0, 'startPos': [2, 0], 'order': 3 'id': 2}]}  
+'permission': [['允许'], {'len': 10}, {'dir': 0, 'startPos': [2, 0], 'order': 3 'id': 2}]}   
 
 **self.listCross, self.listDown**: 列表，[次序，中文释义，英文单词]，分别存储横向和纵向单词列表，用于在UI中显示中文释义，例如：  
 self.listCross:  
@@ -69,7 +61,7 @@ self.listCross:
 
 self.listDown:  
 [1, '线索', 'cue']  
-[2, '校园', 'campus']
+[2, '校园', 'campus']  
 
-### main.py
-主程序
+### test.py  
+测试程序，主要测试填词游戏生成算法的效率及UI界面的显示  
