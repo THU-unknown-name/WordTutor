@@ -3,7 +3,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from game.gameSystem import *
 
+
 class myQLineEdit(QLineEdit):
+    '''
+    自定义QLineEdit类，可控制光标移动方向
+    '''
     def __init__(self, parent, row, col):
         super(myQLineEdit, self).__init__(parent)
         self.parent = parent
@@ -19,14 +23,15 @@ class myQLineEdit(QLineEdit):
     def focusInEvent(self, QFocusEvent):
         self.parent.current_focus = [self.row, self.col]
         super().focusInEvent(QFocusEvent)
+
     pass
+
 
 class gameWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(gameWindow, self).__init__(*args, **kwargs)
 
-        self.windowTitleChanged.connect(self.onWindowTitleChange)
         self.w_width = 800  # 窗口初始宽度 1000
         self.w_height = 600  # 窗口初始高度 650
         self.w_left = 10  # 窗口起始位置x
@@ -40,7 +45,6 @@ class gameWindow(QMainWindow):
         self.def_h = 500
         self.tbEdgeColor = "rgb(150, 150, 150)"
         self.btn_top = 525  # 按键的y轴位置
-        # self.textbox = []
         self.testMode = False
 
     def initUI(self, cw, WORD_DICT, errorWin):
@@ -51,7 +55,7 @@ class gameWindow(QMainWindow):
         :param errorWin: 窗口报错接口
         :return:
         '''
-        self.WORD_DICT =WORD_DICT
+        self.WORD_DICT = WORD_DICT
         self.errorWin = errorWin
         self.cw = cw
         self.setWindowTitle("快乐背单词")
@@ -91,7 +95,7 @@ class gameWindow(QMainWindow):
                                             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                                             ''')
         self.exit.setIcon(QIcon('./exit.jpg'))
-        
+
         if self.testMode:
             self.showAns = QPushButton('显示答案', self)
             self.showAns.setGeometry(QRect(150, self.btn_top, 100, 41))
@@ -130,13 +134,13 @@ class gameWindow(QMainWindow):
         new_cw_len_1 = self.init_cw_len
         if self.def_loc[0] + shift_def_w < rSideCw:
             max_cw_w = self.def_loc[0] - 2 * self.gap - lSideCw
-            new_cw_len_1 = max_cw_w/(self.cw.nCol * self.init_cw_len) * self.init_cw_len
+            new_cw_len_1 = max_cw_w / (self.cw.nCol * self.init_cw_len) * self.init_cw_len
 
         # 如果填词游戏和按键重叠
         new_cw_len_2 = self.init_cw_len
         if dSideCW > self.btn_top:
             max_cw_h = self.btn_top - 2 * self.gap
-            new_cw_len_2 = max_cw_h/(self.cw.nRow * self.init_cw_len) * self.init_cw_len
+            new_cw_len_2 = max_cw_h / (self.cw.nRow * self.init_cw_len) * self.init_cw_len
 
         self.cw_len = min(new_cw_len_1, new_cw_len_2)
 
@@ -155,7 +159,7 @@ class gameWindow(QMainWindow):
         cw_height = self.cw.nRow
         cw_width = self.cw.nCol
         my_regex = QRegExp("[a-zA-Z]")
-        flag = [[[]for i in range(cw_width)]for j in range(cw_height)]
+        flag = [[[] for i in range(cw_width)] for j in range(cw_height)]
         self.textbox = [[] for i in range(len(self.cw.sortedList))]
         self.textbox_word = []
         for word in self.cw.sortedList.keys():
@@ -172,7 +176,8 @@ class gameWindow(QMainWindow):
                         i_col += 1
                     continue
                 self.textbox[word_id].append(myQLineEdit(self, i_row, i_col))
-                self.textbox[word_id][i].move(self.cw_loc[0] + i_col * self.cw_len, self.cw_loc[1] + i_row * self.cw_len)
+                self.textbox[word_id][i].move(self.cw_loc[0] + i_col * self.cw_len,
+                                              self.cw_loc[1] + i_row * self.cw_len)
                 self.textbox[word_id][i].resize(self.cw_len - 1, self.cw_len - 1)
                 self.textbox[word_id][i].setAlignment(Qt.AlignCenter)
                 self.textbox[word_id][i].setFont(QFont("Arial", 16))
@@ -200,7 +205,8 @@ class gameWindow(QMainWindow):
         加载下一轮游戏
         '''
         self.clearAll()
-        cw = createGameFromStudy(self.WORD_DICT, self.errorWin)
+        myGame = gameSystem(self.WORD_DICT)
+        cw = myGame.createGameFromStudy(self.WORD_DICT, self.errorWin)
         # cw = createGameFromAllWord()
         self.cw = cw
         self.close()
@@ -252,7 +258,6 @@ class gameWindow(QMainWindow):
 
                     self.textbox[word_id][i].setText(self.cw.crossword[i_row][i_col])
                     self.textbox[word_id][i].setEnabled(False)
-
 
     def showAnswer(self):
         '''
@@ -329,7 +334,8 @@ class gameWindow(QMainWindow):
 
         self.dispDef = QLabel(self)
         self.dispDef.setText(text)
-        self.dispDef.setGeometry(QRect(int(self.def_loc[0] + shift_def_w), int(self.def_loc[1]), self.def_w - shift_def_w, self.def_h))
+        self.dispDef.setGeometry(
+            QRect(int(self.def_loc[0] + shift_def_w), int(self.def_loc[1]), self.def_w - shift_def_w, self.def_h))
         self.dispDef.setWordWrap(True)
         self.dispDef.setAlignment(Qt.AlignVCenter)
         self.dispDef.setFont(QFont("Simsun", 12))
@@ -339,6 +345,9 @@ class gameWindow(QMainWindow):
                                 ''')
 
     def keyPressEvent(self, a0):
+        '''
+        方向键控制光标移动
+        '''
         if a0.key() == Qt.Key_Up:
             tmp_col = self.current_focus[1]
             tmp_row = self.current_focus[0] - 1
@@ -378,5 +387,3 @@ class gameWindow(QMainWindow):
         print("Context menu requested!!")
         super(gameWindow, self).contextMenuEvent(e)
 
-    def onWindowTitleChange(self, s):
-        self.setWindowTitle(s)
