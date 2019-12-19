@@ -124,7 +124,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if not  self.ui_recite.finished:
             self.ui_recite.show()
     def game_window(self):
-        cw = createGameFromStudy(self.WORD_DICT, self.errorWin)
+        self.myGame = gameSystem(self.WORD_DICT)
+        cw = self.myGame.createGameFromStudy(self.WORD_DICT, self.errorWin)
         self.ui_game = gameWindow()
         self.ui_game.initUI(cw, self.WORD_DICT, self.errorWin)
         self.ui_game.setStyleSheet("#MainWindow{border-image:url(bak1.jpg)}")
