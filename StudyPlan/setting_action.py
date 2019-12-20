@@ -21,11 +21,18 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.vocab = Vocab.Vocab(WORD_DICT)
         self.vocab.saveVocab()  # 保存词库
         self.today_list_obj = TodayList.TodayList(self.vocab)
+        self.open = True
 
         if self.today_list_obj.new_user:
             value, ok = QInputDialog.getInt(self, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
-            self.today_list_obj.plan_for_new_user(value, self.vocab)
-            self.word_num_today = value  # 默认值为50
+            if ok:
+                self.today_list_obj.plan_for_new_user(value, self.vocab)
+                self.word_num_today = value
+                self.today_list_obj.save_todaylist()
+            else:
+                self.word_num_today = 50  # 默认值为50
+                self.open = False
+                return
         else:
             self.word_num_today = self.today_list_obj.get_stated_todaylist_length()
 
@@ -41,7 +48,7 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         for word in self.vocab_dict:
             if self.vocab_dict[word] == 0:
                 continue
-            print(word)
+            # print(word)
             # self.listWidget.addItem(word)
             if self.vocab_dict[word] == 1:
                 self.listWidget.addItem(word + '    未掌握')

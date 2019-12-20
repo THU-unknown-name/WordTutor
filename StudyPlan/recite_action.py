@@ -40,9 +40,14 @@ class ReciteWords:
         self.vocab = Vocab.Vocab(WORD_DICT)
         self.vocab.saveVocab()  # 保存词库
         self.today_list_obj = TodayList.TodayList(self.vocab)
+        self.open = True
         if self.today_list_obj.new_user:
             value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
-            self.today_list_obj.plan_for_new_user(value, self.vocab)
+            if ok:
+                self.today_list_obj.plan_for_new_user(value, self.vocab)
+            else:
+                self.open = False
+                return
         self.today_list_dict = self.today_list_obj.getTodayList()
         self.today_list = list(self.today_list_dict.keys())
         self.finished = False
@@ -148,6 +153,8 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         #self.complete_all.connect(self.pushButton_exit.show)
 
         self.reciting = ReciteWords(self.WORD_DICT, self)
+        if not self.reciting.open:
+            return
         self.finished = False
         if self.reciting.finished:
             # self.close()
@@ -234,6 +241,8 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
             item.setText(_translate("MainWindow", str[i]))
 
     def closeEvent(self, event):
+        if not self.reciting.open:
+            return
         print("Close event activated.")
         self.reciting.vocab.saveVocab()
         self.reciting.today_list_obj.record_finished(self.finished_words_num,
