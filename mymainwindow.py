@@ -121,11 +121,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.ui_recite=ReciteGUI(self.WORD_DICT)
         self.ui_recite.setStyleSheet("#MainWindow{border-image:url(bak1.jpg)}")
         #self.ui_recite.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏边框
-<<<<<<< HEAD
-        if not self.ui_recite.finished:
-=======
         if not  self.ui_recite.finished:
->>>>>>> dev
             self.ui_recite.show()
     def game_window(self):
         self.myGame = gameSystem(self.WORD_DICT)
