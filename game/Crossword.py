@@ -30,11 +30,11 @@ class MyCrossword(object):
         从数据库获取的单词列表需要通过self.generateCrossword(self, wordList)传递到self.wordList中
 
         self.sortedList: 字典，存储成功放入填词格的单词，按照首字母在棋盘格中的位置排序（左上角到右下角）
-        其中每个词的value是一个列表，[[中文释义]，{单词长度}，{放置方向（横向0/纵向1），首字母位置，排序次序}]
+        其中每个词的value是一个列表，[[中文释义]，{单词长度}，{放置方向（横向0/纵向1），首字母位置，单词编号，中文排序次序}]
         例如：
-        {'cue': [['线索'], {'len': 3}, {'dir': 1, 'startPos': [0, 1], 'order': 1}],
-        'campus': [['校园'], {'len': 6}, {'dir': 1, 'startPos': [0, 3], 'order': 2}],
-        'permission': [['允许'], {'len': 10}, {'dir': 0, 'startPos': [2, 0], 'order': 3}]}
+        {'cue': [['线索'], {'len': 3}, {'dir': 1, 'startPos': [0, 1], 'id': 0, 'order': 1}],
+        'campus': [['校园'], {'len': 6}, {'dir': 1, 'startPos': [0, 3], 'id': 1, 'order': 2}],
+        'permission': [['允许'], {'len': 10}, {'dir': 0, 'startPos': [2, 0], 'id': 2, 'order': 3}]}
 
         self.listCross, self.listDown: 列表，分别存储横向和纵向单词列表，用于在UI中显示中文释义
         例如：

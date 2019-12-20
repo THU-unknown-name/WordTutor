@@ -23,14 +23,16 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.today_list_obj = TodayList.TodayList(self.vocab)
 
         if self.today_list_obj.new_user:
-            self.word_num_today = 50  # 默认值为50
+            value, ok = QInputDialog.getInt(self, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
+            self.today_list_obj.plan_for_new_user(value, self.vocab)
+            self.word_num_today = value  # 默认值为50
         else:
             self.word_num_today = self.today_list_obj.get_stated_todaylist_length()
 
         self.textBrowser.setText(str(self.word_num_today))  # 显示今日词数
         self.textBrowser.setAutoFillBackground(True)
         self.listWidget.setAutoFillBackground(True)
-        self.listWidget_2.setAutoFillBackground(True)
+        # self.listWidget_2.setAutoFillBackground(True)
 
         self.vocab_dict = self.vocab.getVocabDict()
         _translate = QCoreApplication.translate
@@ -40,27 +42,31 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
             if self.vocab_dict[word] == 0:
                 continue
             print(word)
-            self.listWidget.addItem(word)
-            self.listWidget_2.addItem('未掌握')
+            # self.listWidget.addItem(word)
             if self.vocab_dict[word] == 1:
+                self.listWidget.addItem(word + '    未掌握')
                 item = self.listWidget.item(ite)
                 # item.setText(_translate("MainWindow", str(word)))
                 item.setBackground(QtGui.QColor(0, 255, 0, 40))
                 item.setSizeHint(QSize(350, 30))
-                item = self.listWidget_2.item(ite)
-                # item.setText(_translate("MainWindow", '未掌握'))
-                item.setBackground(QtGui.QColor(0, 255, 0, 40))
-                item.setSizeHint(QSize(350, 30))
+                item.setTextAlignment(Qt.AlignCenter)
+                # self.listWidget_2.addItem('未掌握')
+                # item = self.listWidget_2.item(ite)
+                # # item.setText(_translate("MainWindow", '未掌握'))
+                # item.setBackground(QtGui.QColor(0, 255, 0, 40))
+                # item.setSizeHint(QSize(350, 30))
             else:
-                print(word)
+                self.listWidget.addItem(word + '    已掌握')
                 item = self.listWidget.item(ite)
                 # item.setText(_translate("MainWindow", str(word)))
                 item.setBackground(QtGui.QColor(0, 255, 0, 127))
                 item.setSizeHint(QSize(350, 30))
-                item = self.listWidget_2.item(ite)
-                # item.setText(_translate("MainWindow", '未掌握'))
-                item.setBackground(QtGui.QColor(0, 255, 0, 127))
-                item.setSizeHint(QSize(350, 30))
+                item.setTextAlignment(Qt.AlignCenter)
+                # self.listWidget_2.addItem('已掌握')
+                # item = self.listWidget_2.item(ite)
+                # # item.setText(_translate("MainWindow", '未掌握'))
+                # item.setBackground(QtGui.QColor(0, 255, 0, 127))
+                # item.setSizeHint(QSize(350, 30))
             ite += 1
 
     # 设置
@@ -71,6 +77,7 @@ class SettingGUI(QMainWindow, setting_gui.Ui_MainWindow, QObject):
         self.textBrowser.setText(str(self.word_num_today))  # 更新今日词数
         try:
             self.today_list_obj.set_stated_todaylist_length(value)
+            self.today_list_obj.save_todaylist()
         except ValueError:
             QMessageBox.warning(self, '提醒', '设定计划表长度必须为小于等于词库总词数的正整数', QMessageBox.Yes)
 

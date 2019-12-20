@@ -41,7 +41,7 @@ class ReciteWords:
         self.vocab.saveVocab()  # 保存词库
         self.today_list_obj = TodayList.TodayList(self.vocab)
         if self.today_list_obj.new_user:
-            value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量：', 50, 5, 700, 1)
+            value, ok = QInputDialog.getInt(parent, '学习计划设定', '请输入每天需要背诵的数量(5-700)：', 50, 5, 700, 1)
             self.today_list_obj.plan_for_new_user(value, self.vocab)
         self.today_list_dict = self.today_list_obj.getTodayList()
         self.today_list = list(self.today_list_dict.keys())
@@ -130,9 +130,11 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(1).setHidden(True)
         self.listWidget.item(2).setHidden(True)
         self.listWidget.item(3).setHidden(True)
+        self.listWidget.item(4).setHidden(True)
+        self.listWidget.item(5).setHidden(True)
         self.label_2.setVisible(False)
         self.label_3.setVisible(False)
-        self.pushButton_exit.setVisible(False)
+        #self.pushButton_exit.setVisible(False)
 
         self.complete_all.connect(self.label_2.show)
         self.complete_all.connect(self.label_3.show)
@@ -143,7 +145,7 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.complete_all.connect(self.pushButton_revoke.hide)
         self.complete_all.connect(self.label_show_again.hide)
         self.complete_all.connect(self.label_stop_showing.hide)
-        self.complete_all.connect(self.pushButton_exit.show)
+        #self.complete_all.connect(self.pushButton_exit.show)
 
         self.reciting = ReciteWords(self.WORD_DICT, self)
         self.finished = False
@@ -170,6 +172,8 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         self.listWidget.item(1).setHidden(not visible)
         self.listWidget.item(2).setHidden(not visible)
         self.listWidget.item(3).setHidden(not visible)
+        self.listWidget.item(4).setHidden(not visible)
+        self.listWidget.item(5).setHidden(not visible)
 
     def show_exp(self):
         # slot
@@ -216,8 +220,18 @@ class ReciteGUI(QMainWindow, recite_gui.Ui_MainWindow, QObject):
         item.setText(_translate("MainWindow", info[0][0]).replace('\n', ' '))  # TODO: merge into a single line
         item = self.listWidget.item(2)
         item.setText(_translate("MainWindow", info[0][1]).replace('\n', ' '))
-        item = self.listWidget.item(3)
-        item.setText(_translate("MainWindow", "".join(info[1]).replace('\n', ' ')))
+        exp = info[1]['reiku']
+        str = []
+        for i in range(len(exp)):
+            s_en = exp[i][0].split('\n')
+            s_en = s_en[2:]
+            s_ch = exp[i][1].split('\n')
+            s_ch = s_ch[1:]
+            if (len(s_ch) > 0) and (len(s_en) > 0):
+                str.append("{}\n{}".format(s_en[0], s_ch[0]))
+        for i in range(min(len(str), 3)):
+            item = self.listWidget.item(3 + i)
+            item.setText(_translate("MainWindow", str[i]))
 
     def closeEvent(self, event):
         print("Close event activated.")
