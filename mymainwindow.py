@@ -121,8 +121,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.ui_recite=ReciteGUI(self.WORD_DICT)
         self.ui_recite.setStyleSheet("#MainWindow{border-image:url(bak1.jpg)}")
         #self.ui_recite.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏边框
-        if not  self.ui_recite.finished:
+        if self.ui_recite.reciting.open and (not self.ui_recite.finished):
             self.ui_recite.show()
+        else:
+            self.ui_recite.close()
     def game_window(self):
         self.myGame = gameSystem(self.WORD_DICT)
         cw = self.myGame.createGameFromStudy(self.WORD_DICT, self.errorWin)
@@ -135,7 +137,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def plan_manage(self):
         self.plan_ui = SettingGUI(self.WORD_DICT)
         self.plan_ui.setStyleSheet("#MainWindow{border-image:url(bak1.jpg)}")
-        self.plan_ui.show()
+        if self.plan_ui.open:
+            self.plan_ui.show()
+        else:
+            self.plan_ui.close()
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
