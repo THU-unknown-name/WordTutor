@@ -4,6 +4,7 @@ Project for Software Engineering, THU 2019 Fall
 从已经背过且记住的单词中抽取，生成填词游戏并显示；可点击“下一轮”开启新的游戏    
 
 待完成：  
+- [x] 记录每个单词的测试总正确率
 - [x] 词库接口（改为与生词本对接）  
 - [x] 完善UI  
     - [x] 填词游戏和中文释义可能会重叠  
@@ -18,11 +19,19 @@ Project for Software Engineering, THU 2019 Fall
 ### gameSystem.py - added on Dec 18, 2019  
 原getWordList.py合并到这里  
 - getWordListFromAll(num): 从全部词库中抽取单词，返回单词列表  
-- getWordListFromAllWithInfo(num): 从全部词库中抽取单词，返回单词列表及其中文释义
-- getWordListFromStudy(self, WORD_DICT, errorWin): 从生词本中抽取单词，返回单词列表及其中文释义  
-- getBestCrossword(self, wordList): 对特定的单词列表，生成最优填词游戏，返回MyCrossword类
+- getWordListFromAllWithInfo(num): 从全部词库中抽取单词，返回单词列表及其中文释义  
+- getWordListFromStudy(WORD_DICT, errorWin): 从生词本中抽取单词，根据单词的历史测试正确率优先抽去正确率低的词，返回单词列表及其中文释义  
+- getBestCrossword(wordList): 对特定的单词列表，生成最优填词游戏，返回MyCrossword类  
+- updateGameHist(wordACC): 根据当前游戏更新pickle文件（单词的历史测试正确率）  
+- updateWordTier(): 把已记住的单词按照历史测试正确率分为两级，优先抽区正确率低的词进行测试  
+- saveGame(): 存储pickle文件  
 - createGameFromAllWord(): 生成优化的填词游戏，保证总单词数不少于5个（从全部词库中抽取）  
 - createGameFromStudy(WORD_DICT, errorWin): **供程序主函数使用**，生成优化的填词游戏，保证总单词数不少于5个（从生词本中抽取）  
+
+### Game.pkl  
+[dict, list]  
+- dict: 所有单词的历史正确率, {'word:', [正确率, 正确次数, 总测试次数]}
+- list: [[已记住但正确率低的词，优先抽取], [已记住且正确率高的词]]
 
 ### ui_game.py
 包括gameWindow类，读取填词游戏，显示游戏及交互UI界面  

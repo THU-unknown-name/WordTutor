@@ -287,7 +287,7 @@ class MyCrossword(object):
                     break
 
             # check following rows
-            for i in range(loc_x + 1, loc_x + tail + 1):
+            for i in range(loc_x + 1, loc_x + tail + 2):
                 if i >= self.nRow:  # exceeding # row of current crossword
                     break
 
@@ -319,7 +319,7 @@ class MyCrossword(object):
                     break
 
             # check along following cols
-            for i in range(loc_y + 1, loc_y + tail + 1):
+            for i in range(loc_y + 1, loc_y + tail + 2):
                 if i >= self.nCol:
                     break
                 elif self.crossword[loc_x][i] is not '#' \
