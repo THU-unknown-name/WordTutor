@@ -23,16 +23,20 @@ class gameSystem():
         self.allWords = self.WORD_DICT.word_list
 
         self.testMode = False
-        self.__record_path = 'game/Game.pkl'
-        self.__game_data = []
+        # print('cur: ', os.getcwd())
+        if os.path.exists('game'):
+            self.__record_path = 'game/Game.pkl'
+        else:
+            self.__record_path = 'Game.pkl'
+        self.game_data = []
 
         # 如果存在pickle文件，则直接从pickle文件中读取Game历史
         if os.path.exists(self.__record_path):
             # print("Existing Vocab......\n")
             pkl_file = open(self.__record_path, 'rb')
-            self.__game_data = pickle.load(pkl_file)
-            self.__vocab_dict = self.__game_data[0]
-            self.__vocab_tier = self.__game_data[1]
+            self.game_data = pickle.load(pkl_file)
+            self.vocab_dict = self.game_data[0]
+            self.vocab_tier = self.game_data[1]
             self.updateWordTier()
             self.saveGame()
             pkl_file.close()
@@ -40,12 +44,12 @@ class gameSystem():
         # 如果还不存在pickle文件（即第一次使用程序），创建新的Game.pkl并且每个单词的正确率均设置为[0, 0, 0]
         else:
             # print("Not Existing Vocab......\n")
-            self.__vocab_dict = {}
+            self.vocab_dict = {}
             for word in self.allWords:
-                self.__vocab_dict[word] = [0, 0, 0]  # (正确率, 正确次数, 测试次数)
+                self.vocab_dict[word] = [0, 0, 0]  # (正确率, 正确次数, 测试次数)
 
-            self.__vocab_tier = [[], []]
-            self.__game_data = [self.__vocab_dict, self.__vocab_tier]
+            self.vocab_tier = [[], []]
+            self.game_data = [self.vocab_dict, self.vocab_tier]
             self.updateWordTier()
             self.saveGame()
 
@@ -56,11 +60,11 @@ class gameSystem():
         '''
         # print('updating...')
         for word in wordACC:
-            self.__vocab_dict[word][2] += 1
+            self.vocab_dict[word][2] += 1
             if wordACC[word] == True:
-                self.__vocab_dict[word][1] += 1
+                self.vocab_dict[word][1] += 1
 
-            self.__vocab_dict[word][0] = self.__vocab_dict[word][1]/self.__vocab_dict[word][2]
+            self.vocab_dict[word][0] = self.vocab_dict[word][1] / self.vocab_dict[word][2]
 
         self.updateWordTier()
         self.saveGame()
@@ -74,19 +78,19 @@ class gameSystem():
         '''
         vocab = Vocab(self.WORD_DICT)
         famWords = vocab.getFamiliarVocabList()
-        self.__vocab_tier = [[],[]]
+        self.vocab_tier = [[], []]
         for word in famWords:
-            if self.__vocab_dict[word][0] < 0.5:
-                self.__vocab_tier[0].append(word)
+            if self.vocab_dict[word][0] < 0.5:
+                self.vocab_tier[0].append(word)
             else:
-                self.__vocab_tier[1].append(word)
+                self.vocab_tier[1].append(word)
 
     def saveGame(self):
         '''
         更新单词的测试正确率，存储到pickle文件（game/Game.pkl）中便于下次读取
         '''
         output = open(self.__record_path, 'wb')
-        pickle.dump(self.__game_data, output)
+        pickle.dump(self.game_data, output)
         output.close()
         pass
 
@@ -142,18 +146,18 @@ class gameSystem():
 
         else:
             try:
-                if self.testMode: print(self.__vocab_tier)
-                word_list_for_game = sample(self.__vocab_tier[0], n_tier_1) + sample(self.__vocab_tier[1], n_tier_2)
+                if self.testMode: print(self.vocab_tier)
+                word_list_for_game = sample(self.vocab_tier[0], n_tier_1) + sample(self.vocab_tier[1], n_tier_2)
             except:
                 try:
                     if self.testMode: print('pick more from tier 1')
-                    word_list_for_game = sample(self.__vocab_tier[0], self.MAX_WORD_NUM - min(self.__vocab_tier[1].__len__(), n_tier_2)) \
-                                         + sample(self.__vocab_tier[1], min(self.__vocab_tier[1].__len__(), n_tier_2))
+                    word_list_for_game = sample(self.vocab_tier[0], self.MAX_WORD_NUM - min(self.vocab_tier[1].__len__(), n_tier_2)) \
+                                         + sample(self.vocab_tier[1], min(self.vocab_tier[1].__len__(), n_tier_2))
                 except:
                     if self.testMode: print('pick more from tier 2')
-                    word_list_for_game = sample(self.__vocab_tier[0], min(self.__vocab_tier[0].__len__(), n_tier_1)) + \
-                                         sample(self.__vocab_tier[1],
-                                                self.MAX_WORD_NUM - min(self.__vocab_tier[0].__len__(), n_tier_1))
+                    word_list_for_game = sample(self.vocab_tier[0], min(self.vocab_tier[0].__len__(), n_tier_1)) + \
+                                         sample(self.vocab_tier[1],
+                                                self.MAX_WORD_NUM - min(self.vocab_tier[0].__len__(), n_tier_1))
 
         wordList = {}
         for word in word_list_for_game:
