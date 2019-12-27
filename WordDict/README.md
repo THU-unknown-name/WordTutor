@@ -81,9 +81,11 @@
         print(info[0][0]) #打印释义
         print(info[1]['hennkou']) #打印例句
         print(info[1]['reiku']) #打印变形
+    ~~~
   ~~~
     
     
+  ~~~
 
 + match_word(self,word):匹配单词
 
@@ -184,7 +186,7 @@
 
 + get_mean(self, word):获取释义
 
-+ update(self):更新词库
++ update(wordlist,rootpath):更新词库
 	+ input:
 
 		wordlist list[str...]: list words to grep information
