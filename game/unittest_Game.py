@@ -36,7 +36,7 @@ class Test_Game(unittest.TestCase):
     def test_03_updateGameHist(self):
 
         WORD_DICT = WordDict()
-        WORD_DICT.load(os.path.dirname(os.getcwd()) + '/WordDict/dict')
+        WORD_DICT.load('WordDict/dict')
         myGame = gameSystem(WORD_DICT)
 
         word = choice(WORD_DICT.word_list)
