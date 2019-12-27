@@ -36,7 +36,7 @@ class gameWindow(QMainWindow):
         self.w_height = 600  # 窗口初始高度 650
         self.w_left = 10  # 窗口起始位置x
         self.w_top = 10  # 窗口起始位置y
-        self.gap = 30  # 模块之间、模块与边界的距离
+        self.gap = 15  # 模块之间、模块与边界的距离
         self.cw_loc = (0, 0)  # 经过居中调整后的填词格的初始位置
         self.init_cw_len = 30  # 单个格子的默认边长
         self.cw_len = 30  # 单个格子的实际边长
@@ -66,6 +66,9 @@ class gameWindow(QMainWindow):
         self.addLabel()  # 标号
         self.addButtons()
         self.setObjectName("MainWindow")
+        self.wordAccuracy = {}
+        for word in self.cw.sortedList:
+            self.wordAccuracy[word] = True
 
     def addButtons(self):
         '''
@@ -133,7 +136,7 @@ class gameWindow(QMainWindow):
         # 如果中文释义模块已达到最小宽度后仍然重叠，缩小填词格的宽度
         new_cw_len_1 = self.init_cw_len
         if self.def_loc[0] + shift_def_w < rSideCw:
-            max_cw_w = self.def_loc[0] - 2 * self.gap - lSideCw
+            max_cw_w = self.def_loc[0] + shift_def_w - 2 * self.gap - lSideCw
             new_cw_len_1 = max_cw_w / (self.cw.nCol * self.init_cw_len) * self.init_cw_len
 
         # 如果填词游戏和按键重叠
@@ -169,12 +172,17 @@ class gameWindow(QMainWindow):
             self.textbox_word.append(word)
             for i in range(self.cw.sortedList[word][1]['len']):
                 if flag[i_row][i_col] != []:
+                    if word not in flag[i_row][i_col][2]:
+                        flag[i_row][i_col][2].append(word)
                     self.textbox[word_id].append(self.textbox[flag[i_row][i_col][0]][flag[i_row][i_col][1]])
                     if self.cw.sortedList[word][2]['dir']:
                         i_row += 1
                     else:
                         i_col += 1
                     continue
+                else:
+                    flag[i_row][i_col] = [word_id, i, [word]]
+
                 self.textbox[word_id].append(myQLineEdit(self, i_row, i_col))
                 self.textbox[word_id][i].move(self.cw_loc[0] + i_col * self.cw_len,
                                               self.cw_loc[1] + i_row * self.cw_len)
@@ -186,7 +194,6 @@ class gameWindow(QMainWindow):
                 my_validator = QRegExpValidator(my_regex, self.textbox[word_id][i])
                 self.textbox[word_id][i].setValidator(my_validator)
                 self.textbox[word_id][i].setEnabled(True)
-                flag[i_row][i_col] = [word_id, i]
                 if self.cw.sortedList[word][2]['dir']:
                     i_row += 1
                 else:
@@ -235,13 +242,13 @@ class gameWindow(QMainWindow):
 
     def checkAnswer(self):
         '''
-        检查并显示答案
-        :return:
+        检查并显示答案，更新单词测试的历史正确率
         '''
         if self.testMode: print('检查答案！')
         cw_height = self.cw.nRow
         cw_width = self.cw.nCol
         self.checkAns.setEnabled(False)
+
         for i_row in range(cw_height):
             for i_col in range(cw_width):
                 # 逐个生成格子
@@ -252,12 +259,17 @@ class gameWindow(QMainWindow):
                     usr_input = self.textbox[word_id][i].text()
                     self.textbox[word_id][i].setStyleSheet("color:black; ")
                     if usr_input.upper() != ans.upper():
+                        for word in self.textbox_map[i_row][i_col][2]:
+                            self.wordAccuracy[word] = False
                         self.textbox[word_id][i].setStyleSheet("border: 0.5px solid %s; "
                                                                "color:red; "
                                                                "background-color:rgba(255,225,225);" % self.tbEdgeColor)
 
                     self.textbox[word_id][i].setText(self.cw.crossword[i_row][i_col])
                     self.textbox[word_id][i].setEnabled(False)
+
+        myGame = gameSystem(self.WORD_DICT)
+        myGame.updateGameHist(self.wordAccuracy)
 
     def showAnswer(self):
         '''
