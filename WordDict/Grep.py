@@ -75,6 +75,8 @@ def Get(sWord,lInfo):
 #Upgrade the dictionary
 def Update(result,CallBack=None):
 	global Info
+	iCount=0
+	iNew=0
 	#Navigate throuhout the dictinary
 	for iLoop1 in range(len(result)):
 		#Fillin Entries not complete
@@ -82,12 +84,18 @@ def Update(result,CallBack=None):
 			data=Get(result[iLoop1][0],Info)
 			if data is not None:
 				result[iLoop1]=result[iLoop1][0:1]+data
+				iNew+=1
 			if CallBack is not None:
 				CallBack(iLoop1)
+		else:
+			iCount+=1
+	return iCount,iNew
 
+def InfoCallback(iLoop1):
+	print("Get %d"%(iLoop1))
 
 def main():
-	inputfile="utf-8.txt"
+	inputfile="wordlist.txt"
 	savefile="save.txt"
 	if os.path.isfile(savefile):
 		#Restore from local file
@@ -100,9 +108,9 @@ def main():
 		with open(inputfile,"r") as fSource:
 			result=[]
 			for sLine in fSource:
-				space=sLine.split()
-				if len(space)>2:
-					result.append([space[1]])
+				sSpace=sLine.strip()
+				if len(sSpace)>0:
+					result.append([sSpace])
 		print("Initialized")
 
 	while True:
@@ -115,7 +123,9 @@ def main():
 					save.write(str(result))
 			elif serial==-2:
 				#-2 for upgrade
-				Update(result)
+				iCount,iNew=Update(result,InfoCallback)
+				print("Grep:%d"%(iNew))
+				print("Current:%d/%d"%(iCount+iNew,len(result)))
 			else:
 				#others for quit
 				break
