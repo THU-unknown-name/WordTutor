@@ -220,6 +220,7 @@ Run Extract.py to Extract the save.txt to dict dir, which writes the details of 
 
 Run Process.sh to convert utf-8.txt to wordlist.txt for a raw word list
 Then Run Process.py to Grep the word information and store them into Directory dict
+Or for a manual version, Run Grep.py and use relevant inputs to get save.txt relevant to wordlist.txt. Then Run Extract.py to extract save.txt into dict directory for the main program to use.
 
 Grep.py:
 + Info: Default classes to collect information
